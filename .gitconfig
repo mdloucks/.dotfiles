@@ -1,0 +1,18 @@
+[user]
+	name = Matt
+	email = 19471665+mdloucks@users.noreply.github.com
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[core]
+	excludesfile = /Users/mloucks/.gitignore_global
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /private/var/folders/b1/sprg8m711sz_2d8f33_mlx_h0000gn/T/AppTranslocation/A56C0E04-08C8-4129-8055-23A23220C3DE/d/Sourcetree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[commit]
+	template = /Users/mloucks/.stCommitMsg
