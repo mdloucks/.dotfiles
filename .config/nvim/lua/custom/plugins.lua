@@ -1,10 +1,9 @@
-local overrides = require("custom.configs.overrides")
+local overrides = require "custom.configs.overrides"
 
 ---@type NvPluginSpec[]
 local plugins = {
 
   -- Override plugin definition options
-
 
   {
     "neovim/nvim-lspconfig",
@@ -26,7 +25,7 @@ local plugins = {
   -- override plugin configs
   {
     "williamboman/mason.nvim",
-    opts = overrides.mason
+    opts = overrides.mason,
   },
 
   {
@@ -41,7 +40,7 @@ local plugins = {
 
   {
     "nvim-telescope/telescope.nvim",
-    opts = overrides.telescope
+    opts = overrides.telescope,
   },
 
   -- Install a plugin
@@ -53,45 +52,37 @@ local plugins = {
     end,
   },
 
-
-{
-  "NeogitOrg/neogit",
-  dependencies = {
-    "nvim-lua/plenary.nvim",         -- required
-    "sindrets/diffview.nvim",        -- optional - Diff integration
-
-    -- Only one of these is needed, not both.
-    "nvim-telescope/telescope.nvim", -- optional
-    "ibhagwan/fzf-lua",              -- optional
+  {
+    "rmagatti/auto-session",
+    lazy = false,
+    config = function()
+      require("auto-session").setup {
+        log_level = "error",
+        auto_session_suppress_dirs = { "~/Downloads", "/" },
+        auto_save_enabled = true,
+        auto_restore_enabled = true,
+      }
+    end,
   },
-  config = true,
-  lazy = false
-},
-
-    {
-  'rmagatti/auto-session',
-  lazy=false,
-  config = function()
-    require("auto-session").setup {
-      log_level = "error",
-      auto_session_suppress_dirs = { "~/Downloads", "/"},
-      auto_save_enabled = true,
-      auto_restore_enabled = true,
-    }
-  end
-},
 
   {
     "mfussenegger/nvim-jdtls",
-    config = function()
-     local config = {
-         cmd = {'lsp/jdt-language-server-1.29.0-202310022015/bin/jdtls'},
-         root_dir = vim.fs.dirname(vim.fs.find({'gradlew', '.git', 'mvnw'}, { upward = true })[1]),
-     }
+  },
 
-     require('jdtls').start_or_attach(config)
-    end
-  }
+  {
+    "ray-x/go.nvim",
+    dependencies = { -- optional packages
+      "ray-x/guihua.lua",
+      "neovim/nvim-lspconfig",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = function()
+      require("go").setup()
+    end,
+    event = { "CmdlineEnter" },
+    ft = { "go", "gomod" },
+    build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
+  },
 
   -- To make a plugin not be loaded
   -- {

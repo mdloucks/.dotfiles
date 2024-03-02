@@ -68,7 +68,7 @@ M.telescope = {
     file_ignore_patterns = {
       "node_modules",
       ".git/", ".cache", "%.o", "%.a", "%.out", "%.class",
-		"%.pdf", "%.mkv", "%.mp4", "%.zip", "composer", "propel", "generated-conf", "data", "html"
+		"%.pdf", "%.mkv", "%.mp4", "%.zip", "composer", "propel", "generated-conf", "data"
     },
   }
 }
