@@ -137,3 +137,4 @@ alias al="nvim ~/shell/alias.sh"
 alias src="source ~/.zshrc"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
