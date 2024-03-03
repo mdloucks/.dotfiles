@@ -129,7 +129,6 @@ alias dotfiles="cd ~/.dotfiles/"
 alias prodssh="ssh Matt@dash.magnusbox.com"
 alias devssh="ssh Matt@devdash.magnusbox.com"
 alias kittyssh="ssh root@kittycarts.online"
-alias ks='NVIM_APPNAME="nvim-kickstart" nvim'
 
 # alias conf="nvim ~/.zshrc && source ~/.zshrc"
 alias al="nvim ~/shell/alias.sh"
