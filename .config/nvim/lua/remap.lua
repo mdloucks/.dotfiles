@@ -14,7 +14,7 @@ vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagn
 -- or just use <C-\><C-n> to exit terminal mode
 vim.keymap.set('t', '<Esc><Esc>', '<C-\\><C-n>', { desc = 'Exit terminal mode' })
 
--- TIP: Disable arrow keys in normal mode
+-- Disable arrow keys in normal mode
 vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
 vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
@@ -40,10 +40,39 @@ vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { noremap = true, silent = true }, 
 vim.keymap.set('n', '<C-x>', '<cmd><C-\\><C-n>', { noremap = true, silent = true })
 vim.keymap.set('n', 'n', 'nzzzv', { noremap = true, silent = true })
 vim.keymap.set('n', 'N', 'Nzzzv', { noremap = true, silent = true })
-vim.keymap.set('n', 'f', '<cmd>normal! "d"', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>bd', '<cmd>w<CR>:bd<CR>', { noremap = true, silent = true })
 
 vim.keymap.set('n', '<leader>x', ':!chmod +x %<CR>', { noremap = true, silent = true })
+
+-- Save session
+vim.keymap.set('n', '<C-s>', ':mksession<CR>', { noremap = true, silent = true })
+
+-- black hole buffer
+vim.keymap.set('n', '<C-x>', '"_d', { noremap = true, silent = true })
+vim.keymap.set('v', '<C-x>', '"_d', { noremap = true, silent = true })
+
+-- trouble.nvim
+vim.keymap.set('n', '<leader>xt', function()
+  require('trouble').toggle()
+end)
+vim.keymap.set('n', '<leader>xw', function()
+  require('trouble').toggle 'workspace_diagnostics'
+end)
+vim.keymap.set('n', '<leader>xd', function()
+  require('trouble').toggle 'document_diagnostics'
+end)
+vim.keymap.set('n', '<leader>xq', function()
+  require('trouble').toggle 'quickfix'
+end)
+vim.keymap.set('n', '<leader>xl', function()
+  require('trouble').toggle 'loclist'
+end)
+vim.keymap.set('n', 'gR', function()
+  require('trouble').toggle 'lsp_references'
+end)
+
+-- Oil
+vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -58,3 +87,16 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.highlight.on_yank()
   end,
 })
+
+-- Flutter
+
+require('telescope').load_extension 'flutter'
+vim.keymap.set('n', '<leader>f', function()
+  require('telescope').extensions.flutter.commands()
+end, { desc = 'Open the snippets for this file type' })
+
+-- Custom plugins :)
+
+vim.keymap.set('n', 'ss', function()
+  require('OpenSnippets').open_snippet()
+end, { desc = 'Open the snippets for this file type' })

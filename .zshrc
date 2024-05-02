@@ -88,12 +88,11 @@ source $ZSH/oh-my-zsh.sh
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='nvim'
+fi
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -106,6 +105,10 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+#
+
+
+export PATH=/Volumes/Acasis-1TB/development/flutter/bin:$PATH
 
 
 alias scripts="cd ~/Scripts/"
@@ -114,7 +117,7 @@ alias fs="cd ~/Scripts/fs-manager/"
 alias ma="bash ~/Scripts/sshfs/mount-all.sh"
 alias kittycarts="~/Scripts/fs-manager/unmount/kittycarts.online & ~/Scripts/fs-manager/mount/kittycarts.online && cd ~/filesystems/kittycarts.online && nvim"
 alias dash="~/Scripts/fs-manager/unmount/dash.magnusbox.com &  ~/Scripts/fs-manager/mount/dash.magnusbox.com && cd ~/filesystems/dash.magnusbox.com/ && nvim"
-alias nvimconf="cd ~/.dotfiles/.config/nvim/lua/custom/"
+alias nvimconf="cd ~/.dotfiles/.config/nvim/"
 alias host="cd ~/Programming/kittycarts.online/pb_public/host/"
 alias player="cd ~/Programming/kittycarts.online/pb_public/player/"
 alias n="nvim"
@@ -129,11 +132,13 @@ alias dotfiles="cd ~/.dotfiles/"
 alias prodssh="ssh Matt@dash.magnusbox.com"
 alias devssh="ssh Matt@devdash.magnusbox.com"
 alias kittyssh="ssh root@kittycarts.online"
+alias lg="lazygit"
 
 # alias conf="nvim ~/.zshrc && source ~/.zshrc"
 alias al="nvim ~/shell/alias.sh"
 
 alias src="source ~/.zshrc"
+alias v="nvim"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
