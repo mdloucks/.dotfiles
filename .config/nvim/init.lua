@@ -12,7 +12,7 @@ local luasnip = require 'luasnip'
 require('luasnip.loaders.from_lua').lazy_load { paths = { './lua/luasnippets/' } }
 
 -- Because VSCode snippets are more common, I'm also going to load those in
-require('luasnip.loaders.from_vscode').lazy_load { paths = { './lua/luasnippets/json/' } }
+require('luasnip.loaders.from_vscode').lazy_load { paths = './lua/jsonsnippets/flutter-riverpod-snippets' }
 
 local js = require 'luasnippets/javascript'
 

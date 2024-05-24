@@ -295,7 +295,6 @@ require('lazy').setup {
       local servers = {
         -- clangd = {},
         svelte = {},
-        gopls = {},
         jsonls = {},
         bashls = {},
         cssls = {
@@ -303,7 +302,6 @@ require('lazy').setup {
         },
         denols = {},
         docker_compose_language_service = {},
-        gofumpt = {},
         html = {},
         htmx = {},
         intelephense = {},
@@ -653,5 +651,30 @@ require('lazy').setup {
     config = true,
   },
 
-  { 'folke/neodev.nvim', opts = {} },
+  {
+    'VonHeikemen/fine-cmdline.nvim',
+    dependencies = {
+      { 'MunifTanjim/nui.nvim' },
+    },
+    opts = {
+
+      cmdline = {
+        prompt = '? ',
+      },
+      popup = {
+        position = {
+          row = '50%',
+          col = '50%',
+        },
+
+        border = {
+          style = 'single',
+          text = {
+            top = ' cmd ',
+            top_align = 'center',
+          },
+        },
+      },
+    },
+  },
 }

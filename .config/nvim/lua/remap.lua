@@ -51,6 +51,17 @@ vim.keymap.set('n', '<C-s>', ':mksession<CR>', { noremap = true, silent = true }
 vim.keymap.set('n', '<C-x>', '"_d', { noremap = true, silent = true })
 vim.keymap.set('v', '<C-x>', '"_d', { noremap = true, silent = true })
 
+-- go back from buffer
+vim.keymap.set('n', '<leader>n', '<C-6>', { silent = true, noremap = true, desc = 'Go back to previous buffer' })
+
+-- default :bd messes up a side split which is annoying for flutter
+
+vim.keymap.set('n', '<leader>db', ':bp|bd #<CR>', { desc = 'Delete buffer' })
+
+-- https://github.com/vonheikemen/fine-cmdline.nvim
+vim.api.nvim_set_keymap('n', '<CR>', '<cmd>FineCmdline<CR>', { noremap = true })
+vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', { noremap = true })
+
 -- trouble.nvim
 vim.keymap.set('n', '<leader>xt', function()
   require('trouble').toggle()
