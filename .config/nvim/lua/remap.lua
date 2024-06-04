@@ -42,14 +42,17 @@ vim.keymap.set('n', 'n', 'nzzzv', { noremap = true, silent = true })
 vim.keymap.set('n', 'N', 'Nzzzv', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>bd', '<cmd>w<CR>:bd<CR>', { noremap = true, silent = true })
 
-vim.keymap.set('n', '<leader>x', ':!chmod +x %<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<leader>x', ':!chmod +x %<CR>', { noremap = true, silent = true })
 
 -- Save session
-vim.keymap.set('n', '<C-s>', ':mksession<CR>', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<C-s>', ':mksession<CR>', { noremap = true, silent = true })
 
 -- black hole buffer
 vim.keymap.set('n', '<C-x>', '"_d', { noremap = true, silent = true })
 vim.keymap.set('v', '<C-x>', '"_d', { noremap = true, silent = true })
+
+vim.keymap.set('n', '<C-n>', '<cmd>bnext<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-p>', '<cmd>bprevious<CR>', { noremap = true, silent = true })
 
 -- go back from buffer
 vim.keymap.set('n', '<leader>n', '<C-6>', { silent = true, noremap = true, desc = 'Go back to previous buffer' })
@@ -61,26 +64,6 @@ vim.keymap.set('n', '<leader>db', ':bp|bd #<CR>', { desc = 'Delete buffer' })
 -- https://github.com/vonheikemen/fine-cmdline.nvim
 vim.api.nvim_set_keymap('n', '<CR>', '<cmd>FineCmdline<CR>', { noremap = true })
 vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', { noremap = true })
-
--- trouble.nvim
-vim.keymap.set('n', '<leader>xt', function()
-  require('trouble').toggle()
-end)
-vim.keymap.set('n', '<leader>xw', function()
-  require('trouble').toggle 'workspace_diagnostics'
-end)
-vim.keymap.set('n', '<leader>xd', function()
-  require('trouble').toggle 'document_diagnostics'
-end)
-vim.keymap.set('n', '<leader>xq', function()
-  require('trouble').toggle 'quickfix'
-end)
-vim.keymap.set('n', '<leader>xl', function()
-  require('trouble').toggle 'loclist'
-end)
-vim.keymap.set('n', 'gR', function()
-  require('trouble').toggle 'lsp_references'
-end)
 
 -- Oil
 vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })

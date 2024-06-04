@@ -108,7 +108,9 @@ fi
 #
 
 
-export PATH=/Volumes/Acasis-1TB/development/flutter/bin:$PATH
+#WHISKER SPECIFIC
+alias whisker="cd /Users/mloucks/development/whisker-mobile/; bash ./scripts/dev/run.sh"
+export PATH=$HOME/development/flutter/bin:$PATH
 
 
 alias scripts="cd ~/Scripts/"
@@ -128,6 +130,9 @@ alias conf="nvim ~/.zshrc && source ~/.zshrc"
 alias svsu="cd ~/Programming/SVSU/"
 alias dotfiles="cd ~/.dotfiles/"
 
+# whisker-stuff
+alias wh="cd ~/development/whisker-mobile/"
+
 # ssh
 alias prodssh="ssh Matt@dash.magnusbox.com"
 alias devssh="ssh Matt@devdash.magnusbox.com"
@@ -142,3 +147,7 @@ alias v="nvim"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+(echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/mloucks/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"

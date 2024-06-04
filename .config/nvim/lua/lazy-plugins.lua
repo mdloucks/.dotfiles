@@ -527,7 +527,6 @@ require('lazy').setup {
       require('mini.pairs').setup()
       -- Startup screen
       require('mini.starter').setup()
-      require('mini.sessions').setup()
       -- Cool surrounding replacer, us sd and sr to replace surroundings
       require('mini.surround').setup()
       -- Cool scope highlinging animation
@@ -542,20 +541,6 @@ require('lazy').setup {
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
-
-      -- Simple and easy statusline.
-      --  You could remove this setup call if you don't like it,
-      --  and try some other statusline plugin
-      local statusline = require 'mini.statusline'
-      statusline.setup()
-
-      -- You can configure sections in the statusline by overriding their
-      -- default behavior. For example, here we disable the section for
-      -- cursor information because line numbers are already enabled
-      ---@diagnostic disable-next-line: duplicate-set-field
-      statusline.section_location = function()
-        return ''
-      end
 
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
@@ -581,6 +566,18 @@ require('lazy').setup {
           -- https://github.com/akinsho/flutter-tools.nvim/issues/267
           disable = { 'dart' },
         },
+
+        textobjects = {
+          swap = {
+            enable = true,
+            swap_next = {
+              ['<leader>a'] = '@parameter.inner',
+            },
+            swap_previous = {
+              ['<leader>A'] = '@parameter.inner',
+            },
+          },
+        },
       }
 
       -- There are additional nvim-treesitter modules that you can use to interact
@@ -594,31 +591,57 @@ require('lazy').setup {
     dependencies = { 'windwp/nvim-ts-autotag' },
   },
 
+  -- MY PLUGINS --------------------------------------------
+  -- MY PLUGINS --------------------------------------------
+  -- MY PLUGINS --------------------------------------------
+
   {
+
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
     event = 'VeryLazy',
     'folke/trouble.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {
-      -- your configuration comes here
-      -- or leave it empty to use the default settings
-      -- refer to the configuration section below
+
+
+
+
+    }, -- for default options, refer to the configuration section for custom setup.
+    cmd = 'Trouble',
+    keys = {
+      {
+        '<leader>xx',
+        '<cmd>Trouble diagnostics toggle<cr>',
+        desc = 'Diagnostics (Trouble)',
+      },
+      {
+        '<leader>xX',
+        '<cmd>Trouble diagnostics toggle filter.buf=0<cr>',
+        desc = 'Buffer Diagnostics (Trouble)',
+      },
+      {
+        '<leader>cs',
+        '<cmd>Trouble symbols toggle focus=false<cr>',
+        desc = 'Symbols (Trouble)',
+      },
+      {
+        '<leader>cl',
+        '<cmd>Trouble lsp toggle focus=false win.position=right<cr>',
+        desc = 'LSP Definitions / references / ... (Trouble)',
+      },
+      {
+        '<leader>xL',
+        '<cmd>Trouble loclist toggle<cr>',
+        desc = 'Location List (Trouble)',
+      },
+      {
+        '<leader>xQ',
+        '<cmd>Trouble qflist toggle<cr>',
+        desc = 'Quickfix List (Trouble)',
+      },
     },
   },
 
-  {
-    'akinsho/flutter-tools.nvim',
-    lazy = true,
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'stevearc/dressing.nvim', -- optional for vim.ui.select
-    },
-    config = true,
-    settings = {
-
-      enableSnippets = true,
-    },
-  },
-
+  -- Love this one, file explorer
   {
     'stevearc/oil.nvim',
     opts = {},
@@ -626,6 +649,7 @@ require('lazy').setup {
     dependencies = { 'nvim-tree/nvim-web-devicons' },
   },
 
+  -- This is nice, allows you to generate json tags from structs
   {
     'ray-x/go.nvim',
     dependencies = { -- optional packages
@@ -641,6 +665,7 @@ require('lazy').setup {
     build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
   },
 
+  -- Need this for my work, great plugin though
   {
     'akinsho/flutter-tools.nvim',
     lazy = false,
@@ -648,9 +673,32 @@ require('lazy').setup {
       'nvim-lua/plenary.nvim',
       'stevearc/dressing.nvim', -- optional for vim.ui.select
     },
-    config = true,
+    opts = {
+      dev_tools = {
+        autostart = true, -- autostart devtools server if not detected
+        auto_open_browser = true, -- Automatically opens devtools in the browser
+      },
+
+      dev_log = {
+        enabled = false,
+        notify_errors = false, -- if there is an error whilst running then notify the user
+        open_cmd = '', -- command to use to open the log buffer
+      },
+    },
   },
 
+  -- Line at the bottom of the screen
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+  },
+
+  -- TODO: Get this setup
+  { 'mfussenegger/nvim-dap' },
+
+  { 'tpope/vim-fugitive' },
+
+  -- Nice plugin that moves the colon commands to the center of the screen in a nice box
   {
     'VonHeikemen/fine-cmdline.nvim',
     dependencies = {
@@ -676,5 +724,34 @@ require('lazy').setup {
         },
       },
     },
+  },
+
+  {
+    'folke/flash.nvim',
+    event = 'VeryLazy',
+    ---@type Flash.Config
+    opts = {},
+    -- stylua: ignore
+          keys = {
+    { "s", mode = { "n", "x", "o" }, function() 
+        -- always center screen on jump
+        require("flash").jump() 
+        vim.cmd("normal! zz")
+      end,
+    desc = "Flash" },
+    { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+    { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+    { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+    { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+  },
+  },
+
+  {
+    'nvim-treesitter/nvim-treesitter-textobjects',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+  },
+
+  {
+    'rmagatti/auto-session',
   },
 }
