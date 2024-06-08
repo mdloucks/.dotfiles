@@ -600,12 +600,7 @@ require('lazy').setup {
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     event = 'VeryLazy',
     'folke/trouble.nvim',
-    opts = {
-
-
-
-
-    }, -- for default options, refer to the configuration section for custom setup.
+    opts = {}, -- for default options, refer to the configuration section for custom setup.
     cmd = 'Trouble',
     keys = {
       {
@@ -696,8 +691,6 @@ require('lazy').setup {
   -- TODO: Get this setup
   { 'mfussenegger/nvim-dap' },
 
-  { 'tpope/vim-fugitive' },
-
   -- Nice plugin that moves the colon commands to the center of the screen in a nice box
   {
     'VonHeikemen/fine-cmdline.nvim',
@@ -753,5 +746,9 @@ require('lazy').setup {
 
   {
     'rmagatti/auto-session',
+  },
+
+  {
+    'sindrets/diffview.nvim',
   },
 }

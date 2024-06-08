@@ -76,10 +76,12 @@ HYPHEN_INSENSITIVE="true"
   zsh-syntax-highlighting
  )
 
+
+source $ZSH/oh-my-zsh.sh
+
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 bindkey '^ ' autosuggest-execute
 
-source $ZSH/oh-my-zsh.sh
 
 # User configuration
 

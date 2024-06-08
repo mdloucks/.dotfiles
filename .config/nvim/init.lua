@@ -100,14 +100,14 @@ require('nvim-treesitter.configs').setup {
       -- Below will go to either the start or the end, whichever is closer.
       -- Use if you want more granular movements
       -- Make it even more gradual by adding multiple queries and regex.
-      goto_next = {
-        [']d'] = '@conditional.outer',
-        ['<C-l>'] = '@parameter.inner',
-      },
-      goto_previous = {
-        ['[d'] = '@conditional.outer',
-        ['<C-h>'] = '@parameter.inner',
-      },
+      -- goto_next = {
+      --   [']d'] = '@conditional.outer',
+      --   ['<C-l>'] = '@parameter.inner',
+      -- },
+      -- goto_previous = {
+      --   ['[d'] = '@conditional.outer',
+      --   ['<C-h>'] = '@parameter.inner',
+      -- },
     },
   },
 }
