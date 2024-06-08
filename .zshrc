@@ -131,6 +131,7 @@ alias mentor="cd /Users/mloucks/Programming/SVSU/CS471/mentorship-program"
 alias conf="nvim ~/.zshrc && source ~/.zshrc"
 alias svsu="cd ~/Programming/SVSU/"
 alias dotfiles="cd ~/.dotfiles/"
+alias prog2="cd /Volumes/Acasis-1TB/Programming/"
 
 # whisker-stuff
 alias wh="cd ~/development/whisker-mobile/"
