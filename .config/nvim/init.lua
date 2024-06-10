@@ -11,6 +11,9 @@ local luasnip = require 'luasnip'
 -- load snippets from path/of/your/nvim/config/my-cool-snippets
 require('luasnip.loaders.from_lua').lazy_load { paths = { './lua/luasnippets/' } }
 
+-- Need this for friendly-snippets
+require('luasnip.loaders.from_vscode').lazy_load()
+
 -- Because VSCode snippets are more common, I'm also going to load those in
 require('luasnip.loaders.from_vscode').lazy_load { paths = './lua/jsonsnippets/flutter-riverpod-snippets' }
 
@@ -20,49 +23,24 @@ local js = require 'luasnippets/javascript'
 luasnip.add_snippets('svelte', js)
 luasnip.add_snippets('typescript', js)
 
--- Make it so that on file load, Sleuth is called to set tab spacing automatically
---
+local Terminal = require('toggleterm.terminal').Terminal
+local lazygit = Terminal:new {
+  cmd = 'lazygit',
+  hidden = true,
+  direction = 'float',
+  float_opts = { border = 'curved' },
+  winbar = { enabled = true },
 
-require('lualine').setup {
-  options = {
-    icons_enabled = true,
-    theme = 'auto',
-    component_separators = { left = '', right = '' },
-    section_separators = { left = '', right = '' },
-    disabled_filetypes = {
-      statusline = {},
-      winbar = {},
-    },
-    ignore_focus = {},
-    always_divide_middle = true,
-    globalstatus = false,
-    refresh = {
-      statusline = 1000,
-      tabline = 1000,
-      winbar = 1000,
-    },
-  },
-  sections = {
-    lualine_a = { 'mode' },
-    lualine_b = { 'branch', 'diff', 'diagnostics' },
-    lualine_c = { 'filename' },
-    lualine_x = { 'buffers' },
-    -- lualine_x = { 'encoding', 'fileformat', 'filetype' },
-    lualine_z = {},
-  },
-  inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = { 'filename' },
-    lualine_x = { 'location' },
-    lualine_y = {},
-    lualine_z = {},
-  },
-  tabline = {},
-  winbar = {},
-  inactive_winbar = {},
-  extensions = { 'oil', 'trouble', 'fugitive' },
+  on_close = function(term)
+    vim.cmd 'bufdo e'
+  end,
 }
+
+function _lazygit_toggle()
+  lazygit:toggle()
+end
+
+vim.api.nvim_set_keymap('n', '<leader>g', '<cmd>lua _lazygit_toggle()<CR>', { noremap = true, silent = true })
 
 -- TODO: Put this in opts or something, not sure why there's an err
 require('nvim-treesitter.configs').setup {
@@ -109,17 +87,5 @@ require('nvim-treesitter.configs').setup {
       --   ['<C-h>'] = '@parameter.inner',
       -- },
     },
-  },
-}
-
-require('auto-session').setup {
-  log_level = 'error',
-
-  cwd_change_handling = {
-    restore_upcoming_session = true, -- already the default, no need to specify like this, only here as an example
-    pre_cwd_changed_hook = nil, -- already the default, no need to specify like this, only here as an example
-    post_cwd_changed_hook = function() -- example refreshing the lualine status line _after_ the cwd changes
-      require('lualine').refresh() -- refresh lualine so the new session name is displayed in the status bar
-    end,
   },
 }

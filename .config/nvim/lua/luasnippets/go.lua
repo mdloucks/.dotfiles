@@ -2,15 +2,15 @@
 -- LuaSnip by L3MON4D3
 -- Also thanks TJ and ziontee113 for the great luasnip tutorial
 
-local ls = require("luasnip")
-local fmt = require("luasnip.extras.fmt").fmt
-local fmta = require("luasnip.extras.fmt").fmta
-local rep = require("luasnip.extras").rep
-local ai = require("luasnip.nodes.absolute_indexer")
-local partial = require("luasnip.extras").partial
-local snips = require("go.snips")
-local log = require("go.utils").log
-local events = require("luasnip.util.events")
+local ls = require 'luasnip'
+local fmt = require('luasnip.extras.fmt').fmt
+local fmta = require('luasnip.extras.fmt').fmta
+local rep = require('luasnip.extras').rep
+local ai = require 'luasnip.nodes.absolute_indexer'
+local partial = require('luasnip.extras').partial
+local snips = require 'go.snips'
+local log = require('go.utils').log
+local events = require 'luasnip.util.events'
 local in_test_fn = {
   show_condition = snips.in_test_function,
   condition = snips.in_test_function,

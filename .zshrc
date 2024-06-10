@@ -71,7 +71,6 @@ HYPHEN_INSENSITIVE="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
  plugins=(
-  git
   zsh-autosuggestions
   zsh-syntax-highlighting
  )
@@ -149,8 +148,6 @@ alias src="source ~/.zshrc"
 alias v="nvim"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 (echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/mloucks/.zprofile
 eval "$(/opt/homebrew/bin/brew shellenv)"
