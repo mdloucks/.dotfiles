@@ -524,17 +524,15 @@ require('lazy').setup {
       --  - yinq - [Y]ank [I]nside [N]ext [']quote
       --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
-      require('mini.pairs').setup()
+      -- require('mini.pairs').setup()
       -- Startup screen
       require('mini.starter').setup()
       -- Cool surrounding replacer, us sd and sr to replace surroundings
-      require('mini.surround').setup()
+      -- require('mini.surround').setup()
       -- Cool scope highlinging animation
       require('mini.indentscope').setup()
       -- Split and join lists/tables
       require('mini.splitjoin').setup()
-      -- Highlight colors
-      require('mini.hipatterns').setup()
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       --
@@ -605,33 +603,8 @@ require('lazy').setup {
     keys = {
       {
         '<leader>xx',
-        '<cmd>Trouble diagnostics toggle<cr>',
+        '<cmd>TroubleToggle<cr>',
         desc = 'Diagnostics (Trouble)',
-      },
-      {
-        '<leader>xX',
-        '<cmd>Trouble diagnostics toggle filter.buf=0<cr>',
-        desc = 'Buffer Diagnostics (Trouble)',
-      },
-      {
-        '<leader>cs',
-        '<cmd>Trouble symbols toggle focus=false<cr>',
-        desc = 'Symbols (Trouble)',
-      },
-      {
-        '<leader>cl',
-        '<cmd>Trouble lsp toggle focus=false win.position=right<cr>',
-        desc = 'LSP Definitions / references / ... (Trouble)',
-      },
-      {
-        '<leader>xL',
-        '<cmd>Trouble loclist toggle<cr>',
-        desc = 'Location List (Trouble)',
-      },
-      {
-        '<leader>xQ',
-        '<cmd>Trouble qflist toggle<cr>',
-        desc = 'Quickfix List (Trouble)',
       },
     },
   },
@@ -818,5 +791,13 @@ require('lazy').setup {
     version = '*',
     opts = {--[[ things you want to change go here]]
     },
+  },
+
+  {
+    'windwp/nvim-autopairs',
+    event = 'InsertEnter',
+    config = true,
+    -- use opts = {} for passing setup options
+    -- this is equalent to setup({}) function
   },
 }

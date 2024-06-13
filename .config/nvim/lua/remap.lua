@@ -34,7 +34,6 @@ vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { noremap = true, silent = true }, 
 vim.keymap.set('n', '<C-x>', '<cmd><C-\\><C-n>', { noremap = true, silent = true })
 vim.keymap.set('n', 'n', 'nzzzv', { noremap = true, silent = true })
 vim.keymap.set('n', 'N', 'Nzzzv', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>bd', '<cmd>w<CR>:bd<CR>', { noremap = true, silent = true })
 
 -- vim.keymap.set('n', '<leader>x', ':!chmod +x %<CR>', { noremap = true, silent = true })
 
@@ -52,8 +51,6 @@ vim.keymap.set('n', '<C-p>', '<cmd>bprevious<CR>', { noremap = true, silent = tr
 vim.keymap.set('n', '<leader>n', '<C-6>', { silent = true, noremap = true, desc = 'Go back to previous buffer' })
 
 -- default :bd messes up a side split which is annoying for flutter
-
-vim.keymap.set('n', '<leader>db', ':bp|bd #<CR>', { desc = 'Delete buffer' })
 
 -- https://github.com/vonheikemen/fine-cmdline.nvim
 vim.api.nvim_set_keymap('n', '<CR>', '<cmd>FineCmdline<CR>', { noremap = true })
@@ -85,6 +82,12 @@ end, { desc = 'Open the snippets for this file type' })
 
 -- Custom plugins :)
 
-vim.keymap.set('n', 'ss', function()
-  require('OpenSnippets').open_snippet()
-end, { desc = 'Open the snippets for this file type' })
+-- vim.keymap.set('n', 'ss', function()
+--   require('OpenSnippets').open_snippet()
+-- end, { desc = 'Open the snippets for this file type' })
+--
+
+-- diffview (this plugin is awesome for seeing historical changes)
+vim.keymap.set('n', '<leader>dvo', '<CMD>DiffviewOpen<CR>', { desc = 'Diff view open' })
+vim.keymap.set('n', '<leader>dvc', '<CMD>DiffviewClose<CR>', { desc = 'Diff view close' })
+vim.keymap.set('n', '<leader>dvh', '<CMD>DiffviewFileHistory<CR>', { desc = 'Diff view file history' })
