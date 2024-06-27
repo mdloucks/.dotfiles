@@ -134,6 +134,7 @@ alias conf="nvim ~/.zshrc && source ~/.zshrc"
 alias svsu="cd ~/Programming/SVSU/"
 alias dotfiles="cd ~/.dotfiles/"
 alias prog2="cd /Volumes/Acasis-1TB/Programming/"
+alias br="flutter pub run build_runner build --delete-conflicting-outputs"
 
 # whisker-stuff
 alias wh="cd ~/development/whisker-mobile/"
