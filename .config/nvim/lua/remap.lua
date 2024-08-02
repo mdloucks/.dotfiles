@@ -91,3 +91,6 @@ end, { desc = 'Open the snippets for this file type' })
 vim.keymap.set('n', '<leader>dvo', '<CMD>DiffviewOpen<CR>', { desc = 'Diff view open' })
 vim.keymap.set('n', '<leader>dvc', '<CMD>DiffviewClose<CR>', { desc = 'Diff view close' })
 vim.keymap.set('n', '<leader>dvh', '<CMD>DiffviewFileHistory<CR>', { desc = 'Diff view file history' })
+
+-- Themery
+vim.keymap.set('n', '<leader>th', '<CMD>Themery<CR>', { desc = 'Change theme' })
