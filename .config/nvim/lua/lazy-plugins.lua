@@ -170,7 +170,19 @@ require('lazy').setup {
 
       -- Useful status updates for LSP.
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      {
+        'j-hui/fidget.nvim',
+        opts = {
+          notification = {
+            window = {
+              winblend = 0, -- Background color opacity in the notification window
+              border = 'none', -- Border around the notification window
+              align = 'top', -- How to align the notification window
+              relative = 'editor', -- What the notification window position is relative to
+            },
+          },
+        },
+      },
     },
     config = function()
       -- Brief Aside: **What is LSP?**
@@ -395,7 +407,9 @@ require('lazy').setup {
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
-        -- javascript = { { "prettierd", "prettier" } },
+        javascript = { { 'prettierd', 'prettier' } },
+        typescriptreact = { 'prettier' },
+        typescript = { 'prettier' },
       },
     },
   },
@@ -506,7 +520,7 @@ require('lazy').setup {
       vim.cmd.colorscheme 'nightfox'
 
       -- You can configure highlights by doing something like
-      vim.cmd.hi 'Comment gui=none'
+      -- vim.cmd.hi ''
     end,
   },
 
@@ -686,17 +700,71 @@ require('lazy').setup {
         },
       },
       sections = {
-        lualine_a = { 'mode' },
-        lualine_b = { 'branch', 'diff', 'diagnostics' },
-        lualine_c = { 'filename' },
-        lualine_x = { 'buffers' },
+
+        lualine_a = {
+          {
+            'mode',
+            -- Truncate to only show one char
+            fmt = function(str)
+              return str:sub(1, 1)
+            end,
+          },
+        },
+
+        lualine_b = { {
+          'branch',
+          fmt = function(str)
+            return str:sub(1, 10)
+          end,
+        }, 'diagnostics' },
+        lualine_c = {},
+        lualine_x = {
+          {
+            'buffers',
+            show_filename_only = true, -- Shows shortened relative path when set to false.
+            hide_filename_extension = true, -- Hide filename extension when set to true.
+            show_modified_status = true, -- Shows indicator when the buffer is modified.
+
+            mode = 0, -- 0: Shows buffer name
+            -- 1: Shows buffer index
+            -- 2: Shows buffer name + buffer index
+            -- 3: Shows buffer number
+            -- 4: Shows buffer name + buffer number
+
+            max_length = vim.o.columns * 6 / 7, -- Maximum width of buffers component,
+
+            -- Automatically updates active buffer color to match color of other components (will be overidden if buffers_color is set)
+            use_mode_colors = true,
+
+            -- buffers_color = {
+            --   -- Same values as the general color option can be used here.
+            --   active = 'lualine_{section}_normal', -- Color for active buffer.
+            --   inactive = 'lualine_{section}_inactive', -- Color for inactive buffer.
+            -- },
+
+            buffers_color = {
+              active = { fg = '#ff9e64' }, -- Color for active buffers
+              inactive = { fg = '#5c6370' }, -- Color for inactive buffers
+            },
+
+            symbols = {
+              modified = ' ●', -- Text to show when the buffer is modified
+              alternate_file = '', -- Text to show to identify the alternate file
+              directory = '', -- Text to show when the buffer is a directory
+            },
+          },
+        },
         -- lualine_x = { 'encoding', 'fileformat', 'filetype' },
         lualine_z = {},
       },
       inactive_sections = {
         lualine_a = {},
         lualine_b = {},
-        lualine_c = { 'filename' },
+        lualine_c = {
+          {
+            'filename',
+          },
+        },
         lualine_x = { 'location' },
         lualine_y = {},
         lualine_z = {},
@@ -806,4 +874,11 @@ require('lazy').setup {
     -- use opts = {} for passing setup options
     -- this is equalent to setup({}) function
   },
+
+  {
+    'norcalli/nvim-colorizer.lua',
+  },
+
+  -- Theme switcher
+  { 'zaldih/themery.nvim' },
 }
