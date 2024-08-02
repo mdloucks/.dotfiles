@@ -150,6 +150,7 @@ alias al="nvim ~/shell/alias.sh"
 
 alias src="source ~/.zshrc"
 alias v="nvim"
+alias python="python3"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -158,3 +159,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" # This loads nvm
+[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion

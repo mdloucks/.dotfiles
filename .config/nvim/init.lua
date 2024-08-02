@@ -91,3 +91,34 @@ require('nvim-treesitter.configs').setup {
     },
   },
 }
+
+-- Fill in color for hex codes
+require('colorizer').setup()
+
+local colorschemes = vim.fn.getcompletion('', 'color')
+local themes = {}
+
+-- This logic will make each terminal background transparent after application
+-- so I can see my cat in the background
+for _, value in ipairs(colorschemes) do
+  table.insert(themes, {
+    name = value,
+    colorscheme = value,
+    after = [[
+      vim.cmd('highlight Normal guibg=NONE ctermbg=NONE')
+      vim.cmd('highlight NonText guibg=NONE ctermbg=NONE')
+      vim.cmd('highlight NormalNC guibg=NONE ctermbg=NONE')
+      vim.cmd('highlight SignColumn guibg=NONE ctermbg=NONE')
+      vim.cmd('highlight CursorLine guibg=NONE ctermbg=NONE')
+      vim.cmd('highlight StatusLine guibg=NONE ctermbg=NONE')
+      vim.cmd('highlight StatusLineNC guibg=NONE ctermbg=NONE')
+      vim.cmd('highlight LineNr guibg=NONE ctermbg=NONE')
+]],
+  })
+end
+
+-- Minimal config
+require('themery').setup {
+  themes = themes, -- Your list of installed colorschemes.
+  livePreview = true, -- Apply theme while picking. Default to true.
+}
