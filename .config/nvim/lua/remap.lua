@@ -94,3 +94,6 @@ vim.keymap.set('n', '<leader>dvh', '<CMD>DiffviewFileHistory<CR>', { desc = 'Dif
 
 -- Themery
 vim.keymap.set('n', '<leader>th', '<CMD>Themery<CR>', { desc = 'Change theme' })
+
+-- Delete all buffers, don't show output
+vim.keymap.set('n', 'bda', '<CMD>silent! bufdo bd<CR>', { desc = 'Delete all buffers' })
