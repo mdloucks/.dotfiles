@@ -8,6 +8,8 @@ require 'remap'
 
 local luasnip = require 'luasnip'
 
+local auto_session = require 'auto-session'
+
 -- load snippets from path/of/your/nvim/config/my-cool-snippets
 require('luasnip.loaders.from_lua').lazy_load { paths = { './lua/luasnippets/' } }
 
@@ -31,11 +33,17 @@ local lazygit = Terminal:new {
   float_opts = { border = 'curved' },
   winbar = { enabled = true },
 
+  on_open = function(term)
+    vim.cmd 'SessionSave'
+  end,
+
   on_close = function(term)
-    vim.cmd 'bufdo e'
+    vim.cmd 'SessionRestore'
+    vim.cmd 'bufdo e!'
   end,
 }
 
+-- GIT
 function _lazygit_toggle()
   lazygit:toggle()
 end
