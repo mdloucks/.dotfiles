@@ -330,7 +330,6 @@ require('lazy').setup {
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`tsserver`) will work just fine
-        tsserver = {},
         --
 
         lua_ls = {
@@ -408,8 +407,8 @@ require('lazy').setup {
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
         javascript = { { 'prettierd', 'prettier' } },
-        typescriptreact = { 'prettier' },
-        typescript = { 'prettier' },
+        -- typescriptreact = { 'prettier' },
+        -- typescript = { 'prettier' },
       },
     },
   },
@@ -834,17 +833,14 @@ require('lazy').setup {
 
   {
     'rmagatti/auto-session',
+    lazy = false,
+
+    ---@module "auto-session"
+    ---@type AutoSession.Config
     opts = {
-
-      log_level = 'error',
-
-      cwd_change_handling = {
-        restore_upcoming_session = true, -- already the default, no need to specify like this, only here as an example
-        pre_cwd_changed_hook = nil, -- already the default, no need to specify like this, only here as an example
-        post_cwd_changed_hook = function() -- example refreshing the lualine status line _after_ the cwd changes
-          require('lualine').refresh() -- refresh lualine so the new session name is displayed in the status bar
-        end,
-      },
+      use_git_branch = true,
+      suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
+      -- log_level = 'debug',
     },
   },
 
