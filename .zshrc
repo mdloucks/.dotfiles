@@ -52,7 +52,7 @@ ENABLE_CORRECTION="true"
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
 # much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
+DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # Uncomment the following line if you want to change the command execution time
 # stamp shown in the history command output.
@@ -115,6 +115,7 @@ fi
 #WHISKER SPECIFIC
 alias whisker="cd /Users/mloucks/development/whisker-mobile/; bash ./scripts/dev/run.sh"
 export PATH=$HOME/development/flutter/bin:$PATH
+alias build_runner="flutter pub run build_runner build --delete-conflicting-outputs"
 
 
 alias scripts="cd ~/Scripts/"
