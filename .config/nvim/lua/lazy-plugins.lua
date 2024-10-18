@@ -671,6 +671,49 @@ require('lazy').setup {
         notify_errors = false, -- if there is an error whilst running then notify the user
         open_cmd = '', -- command to use to open the log buffer
       },
+      debugger = { -- integrate with nvim dap + install dart code debugger
+        enabled = true,
+        -- if empty dap will not stop on any exceptions, otherwise it will stop on those specified
+        -- see |:help dap.set_exception_breakpoints()| for more info
+        exception_breakpoints = {},
+        -- Whether to call toString() on objects in debug views like hovers and the
+        -- variables list.
+        -- Invoking toString() has a performance cost and may introduce side-effects,
+        -- although users may expected this functionality. null is treated like false.
+        evaluate_to_string_in_debug_views = true,
+        register_configurations = function(paths)
+          -- If you want to load .vscode launch.json automatically run the following:
+          -- require("dap.ext.vscode").load_launchjs()
+
+          local dap = require 'dap'
+
+          -- Register Dart configurations
+          dap.configurations.dart = {
+            {
+              type = 'dart',
+              request = 'launch',
+              name = 'Launch Dart',
+              dartSdkPath = '/opt/flutter/bin/cache/dart-sdk/bin/dart', -- Ensure this is correct
+              flutterSdkPath = '/opt/flutter/bin/flutter', -- Ensure this is correct
+              program = '${workspaceFolder}/lib/main.dart', -- Ensure this is correct
+              cwd = '${workspaceFolder}',
+            },
+          }
+
+          -- Register Flutter configurations
+          dap.configurations.flutter = {
+            {
+              type = 'flutter',
+              request = 'launch',
+              name = 'Launch Flutter',
+              dartSdkPath = '/opt/flutter/bin/cache/dart-sdk/bin/dart', -- Ensure this is correct
+              flutterSdkPath = '/opt/flutter/bin/flutter', -- Ensure this is correct
+              program = '${workspaceFolder}/lib/main.dart', -- Ensure this is correct
+              cwd = '${workspaceFolder}',
+            },
+          }
+        end,
+      },
     },
   },
 
@@ -877,4 +920,67 @@ require('lazy').setup {
 
   -- Theme switcher
   { 'zaldih/themery.nvim' },
+
+  {
+    'rcarriga/nvim-dap-ui',
+    dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
+    config = function()
+      require('dapui').setup()
+    end,
+  },
+
+  {
+    'mfussenegger/nvim-dap',
+    config = function()
+      -- Configure DAP adapters for Dart and Flutter
+
+      require('dap').adapters.dart = {
+        type = 'executable',
+        command = 'dart', -- Adjust this if using FVM
+        args = { 'debug_adapter' },
+        options = {
+          detached = false,
+        },
+      }
+
+      require('dap').adapters.flutter = {
+        type = 'executable',
+        command = 'flutter', -- Adjust this if using FVM
+        args = { 'debug_adapter' },
+        options = {
+          detached = false,
+        },
+      }
+
+      -- DAP configurations for Dart and Flutter
+      require('dap').configurations.dart = {
+        {
+          type = 'dart',
+          request = 'launch',
+          name = 'Launch Dart',
+          dartSdkPath = '/opt/flutter/bin/cache/dart-sdk/bin/dart', -- Ensure this is correct
+          flutterSdkPath = '/opt/flutter/bin/flutter', -- Ensure this is correct
+          program = '${workspaceFolder}/lib/main.dart', -- Ensure this is correct
+          cwd = '${workspaceFolder}',
+        },
+      }
+
+      require('dap').configurations.flutter = {
+        {
+          type = 'flutter',
+          request = 'launch',
+          name = 'Launch Flutter',
+          dartSdkPath = '/opt/flutter/bin/cache/dart-sdk/bin/dart', -- Ensure this is correct
+          flutterSdkPath = '/opt/flutter/bin/flutter', -- Ensure this is correct
+          program = '${workspaceFolder}/lib/main.dart', -- Ensure this is correct
+          cwd = '${workspaceFolder}',
+        },
+      }
+    end,
+    event = 'VimEnter', -- Ensure early loading
+  },
+
+  {
+    'theHamsta/nvim-dap-virtual-text',
+  },
 }
