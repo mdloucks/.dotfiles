@@ -82,7 +82,8 @@ source $ZSH/oh-my-zsh.sh
 
 
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
-bindkey '^ ' autosuggest-execute
+
+bindkey '^M' autosuggest-execute
 
 
 # User configuration
