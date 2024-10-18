@@ -1,4 +1,4 @@
-local hyper = { "cmd", "alt" }
+local hyper = { "ctrl", "alt" }
 
 hs.hotkey.bind(hyper, "R", function()
 	hs.reload()
