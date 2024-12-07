@@ -28,10 +28,9 @@ vim.keymap.set('n', '<leader>t', vim.cmd.UndotreeToggle)
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
 
-vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { noremap = true, silent = true }, 'move line down')
-vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { noremap = true, silent = true }, 'move line up')
+vim.keymap.set('v', '<C-k>', ":m '<-2<CR>gv=gv", { noremap = true, silent = true }, 'move line up')
+vim.keymap.set('v', '<C-j>', ":m '>+1<CR>gv=gv", { noremap = true, silent = true }, 'move line down')
 
-vim.keymap.set('n', '<C-x>', '<cmd><C-\\><C-n>', { noremap = true, silent = true })
 vim.keymap.set('n', 'n', 'nzzzv', { noremap = true, silent = true })
 vim.keymap.set('n', 'N', 'Nzzzv', { noremap = true, silent = true })
 
@@ -41,8 +40,8 @@ vim.keymap.set('n', 'N', 'Nzzzv', { noremap = true, silent = true })
 -- vim.keymap.set('n', '<C-s>', ':mksession<CR>', { noremap = true, silent = true })
 
 -- black hole buffer
-vim.keymap.set('n', '<C-x>', '"_d', { noremap = true, silent = true })
-vim.keymap.set('v', '<C-x>', '"_d', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-g>', '"_d', { noremap = true, silent = true })
+vim.keymap.set('v', '<C-g>', '"_d', { noremap = true, silent = true })
 
 vim.keymap.set('n', '<C-n>', '<cmd>bnext<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<C-p>', '<cmd>bprevious<CR>', { noremap = true, silent = true })
@@ -98,9 +97,9 @@ vim.keymap.set('n', '<leader>th', '<CMD>Themery<CR>', { desc = 'Change theme' })
 -- Delete all buffers, don't show output
 vim.keymap.set('n', 'bda', '<CMD>silent! bufdo bd<CR>', { desc = 'Delete all buffers' })
 
-vim.api.nvim_set_keymap('n', '<F5>', ':lua require("dap").continue()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<F10>', ':lua require("dap").step_over()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<F11>', ':lua require("dap").step_into()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<F12>', ':lua require("dap").step_out()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>dc', ':lua require("dap").continue()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>do', ':lua require("dap").step_over()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>di', ':lua require("dap").step_into()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>do', ':lua require("dap").step_out()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>b', ':lua require("dap").toggle_breakpoint()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>ui', ':lua require("dapui").toggle()<CR>', { noremap = true, silent = true })
