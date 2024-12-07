@@ -19,20 +19,24 @@ local function bindApplications(keysAndApps)
 end
 
 local appsToBind = {
-	["net.kovidgoyal.kitty"] = "t",
-	["org.mozilla.firefox"] = "f",
-	["com.apple.iphonesimulator"] = "s",
-	["com.apple.systempreferences"] = "p",
-	["com.1password.1password"] = "1",
-	["com.google.Chrome"] = "w",
+    ["org.alacritty"] = "t",  
+    ["org.mozilla.firefox"] = "f",
+    ["com.apple.iphonesimulator"] = "s",
+    ["com.apple.systempreferences"] = "p",
+    ["com.1password.1password"] = "1",
+    ["com.google.Chrome"] = "w",
 
-	["com.apple.iCal"] = "c",
-	["com.apple.mail"] = "e",
-	["com.apple.MobileSMS"] = "m",
-	["com.apple.notes"] = "n",
-	["com.apple.finder"] = "x",
-	["com.apple.reminders"] = "r",
+    ["com.apple.iCal"] = "c",
+    ["com.apple.mail"] = "e",
+    ["com.apple.MobileSMS"] = "m",
+    ["com.apple.notes"] = "n",
+    ["com.apple.finder"] = "x",
+    ["com.apple.reminders"] = "r",
+
+    ["com.tinyspeck.slackmacgap"] = "v",  
+    ["com.spotify.client"] = "a",  
 }
+
 
 bindApplications(appsToBind)
 
