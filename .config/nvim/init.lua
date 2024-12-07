@@ -34,11 +34,11 @@ local lazygit = Terminal:new {
   winbar = { enabled = true },
 
   on_open = function(term)
-    vim.cmd 'SessionSave'
+    -- vim.cmd 'SessionSave'
   end,
 
   on_close = function(term)
-    vim.cmd 'SessionRestore'
+    -- vim.cmd 'SessionRestore'
     vim.cmd 'bufdo e!'
   end,
 }
@@ -112,16 +112,16 @@ for _, value in ipairs(colorschemes) do
   table.insert(themes, {
     name = value,
     colorscheme = value,
-    after = [[
-      vim.cmd('highlight Normal guibg=NONE ctermbg=NONE')
-      vim.cmd('highlight NonText guibg=NONE ctermbg=NONE')
-      vim.cmd('highlight NormalNC guibg=NONE ctermbg=NONE')
-      vim.cmd('highlight SignColumn guibg=NONE ctermbg=NONE')
-      vim.cmd('highlight CursorLine guibg=NONE ctermbg=NONE')
-      vim.cmd('highlight StatusLine guibg=NONE ctermbg=NONE')
-      vim.cmd('highlight StatusLineNC guibg=NONE ctermbg=NONE')
-      vim.cmd('highlight LineNr guibg=NONE ctermbg=NONE')
-]],
+    --     after = [[
+    --       vim.cmd('highlight Normal guibg=NONE ctermbg=NONE')
+    --       vim.cmd('highlight NonText guibg=NONE ctermbg=NONE')
+    --       vim.cmd('highlight NormalNC guibg=NONE ctermbg=NONE')
+    --       vim.cmd('highlight SignColumn guibg=NONE ctermbg=NONE')
+    --       vim.cmd('highlight CursorLine guibg=NONE ctermbg=NONE')
+    --       vim.cmd('highlight StatusLine guibg=NONE ctermbg=NONE')
+    --       vim.cmd('highlight StatusLineNC guibg=NONE ctermbg=NONE')
+    --       vim.cmd('highlight LineNr guibg=NONE ctermbg=NONE')
+    -- ]],
   })
 end
 
