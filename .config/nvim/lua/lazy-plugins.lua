@@ -47,15 +47,6 @@ require('lazy').setup {
     event = 'VeryLazy', -- Sets the loading event to 'VeryLazy'
     config = function() -- This is the function that runs, AFTER loading
       require('which-key').setup()
-
-      -- Document existing key chains
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-      }
     end,
   },
 
@@ -262,7 +253,7 @@ require('lazy').setup {
 
           -- Opens a popup that displays documentation about the word under your cursor
           --  See `:help K` for why this keymap
-          map('K', vim.lsp.buf.hover, 'Hover Documentation')
+          map('<C-k>', vim.lsp.buf.hover, 'Hover Documentation')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header
@@ -515,11 +506,7 @@ require('lazy').setup {
     lazy = false, -- make sure we load this during startup if it is your main colorscheme
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
-      -- Load the colorscheme here
       vim.cmd.colorscheme 'nightfox'
-
-      -- You can configure highlights by doing something like
-      -- vim.cmd.hi ''
     end,
   },
 
@@ -541,7 +528,22 @@ require('lazy').setup {
       -- Startup screen
       require('mini.starter').setup()
       -- Cool surrounding replacer, us sd and sr to replace surroundings
-      -- require('mini.surround').setup()
+      -- I replace the defaults because I'm using flash.nvim
+      require('mini.surround').setup {
+        custom_surroundings = nil,
+        highlight_duration = 500,
+        mappings = {
+          add = '<C-s>a', -- Control + s + a
+          delete = '<C-s>d', -- Control + s + d
+          find = '<C-s>f', -- Control + s + f
+          find_left = '<C-s>F', -- Control + s + F
+          highlight = '<C-s>h', -- Control + s + h
+          replace = '<C-s>r', -- Control + s + r
+          update_n_lines = '<C-s>n', -- Control + s + n
+          suffix_last = 'l', -- Suffix for searching
+          suffix_next = 'n', -- Suffix for searching
+        },
+      }
       -- Cool scope highlinging animation
       require('mini.indentscope').setup()
       -- Split and join lists/tables
@@ -818,12 +820,10 @@ require('lazy').setup {
     },
   },
 
-  -- TODO: Get this setup
-  { 'mfussenegger/nvim-dap' },
-
   -- Nice plugin that moves the colon commands to the center of the screen in a nice box
   {
     'VonHeikemen/fine-cmdline.nvim',
+    event = 'VeryLazy',
     dependencies = {
       { 'MunifTanjim/nui.nvim' },
     },
@@ -865,7 +865,6 @@ require('lazy').setup {
     { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
     { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
     { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-    { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
   },
   },
 
@@ -931,6 +930,7 @@ require('lazy').setup {
 
   {
     'mfussenegger/nvim-dap',
+    dependencies = { 'theHamsta/nvim-dap-virtual-text' },
     config = function()
       -- Configure DAP adapters for Dart and Flutter
 
