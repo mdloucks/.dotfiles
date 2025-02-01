@@ -25,31 +25,6 @@ local js = require 'luasnippets/javascript'
 luasnip.add_snippets('svelte', js)
 luasnip.add_snippets('typescript', js)
 
-local Terminal = require('toggleterm.terminal').Terminal
-local lazygit = Terminal:new {
-  cmd = 'lazygit',
-  hidden = true,
-  direction = 'float',
-  float_opts = { border = 'curved' },
-  winbar = { enabled = true },
-
-  on_open = function(term)
-    -- vim.cmd 'SessionSave'
-  end,
-
-  on_close = function(term)
-    -- vim.cmd 'SessionRestore'
-    vim.cmd 'bufdo e!'
-  end,
-}
-
--- GIT
-function _lazygit_toggle()
-  lazygit:toggle()
-end
-
-vim.api.nvim_set_keymap('n', '<leader>g', '<cmd>lua _lazygit_toggle()<CR>', { noremap = true, silent = true })
-
 vim.cmd 'Gitsigns toggle_current_line_blame'
 
 -- TODO: Put this in opts or something, not sure why there's an err
@@ -102,31 +77,3 @@ require('nvim-treesitter.configs').setup {
 
 -- Fill in color for hex codes
 require('colorizer').setup()
-
-local colorschemes = vim.fn.getcompletion('', 'color')
-local themes = {}
-
--- This logic will make each terminal background transparent after application
--- so I can see my cat in the background
-for _, value in ipairs(colorschemes) do
-  table.insert(themes, {
-    name = value,
-    colorscheme = value,
-    --     after = [[
-    --       vim.cmd('highlight Normal guibg=NONE ctermbg=NONE')
-    --       vim.cmd('highlight NonText guibg=NONE ctermbg=NONE')
-    --       vim.cmd('highlight NormalNC guibg=NONE ctermbg=NONE')
-    --       vim.cmd('highlight SignColumn guibg=NONE ctermbg=NONE')
-    --       vim.cmd('highlight CursorLine guibg=NONE ctermbg=NONE')
-    --       vim.cmd('highlight StatusLine guibg=NONE ctermbg=NONE')
-    --       vim.cmd('highlight StatusLineNC guibg=NONE ctermbg=NONE')
-    --       vim.cmd('highlight LineNr guibg=NONE ctermbg=NONE')
-    -- ]],
-  })
-end
-
--- Minimal config
-require('themery').setup {
-  themes = themes, -- Your list of installed colorschemes.
-  livePreview = true, -- Apply theme while picking. Default to true.
-}

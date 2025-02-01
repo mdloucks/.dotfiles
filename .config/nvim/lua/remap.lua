@@ -82,10 +82,9 @@ end, { desc = 'Open the snippets for this file type' })
 
 -- Custom plugins :)
 
--- vim.keymap.set('n', 'ss', function()
---   require('OpenSnippets').open_snippet()
--- end, { desc = 'Open the snippets for this file type' })
---
+vim.keymap.set('n', 'ss', function()
+  require('OpenSnippets').open_snippet()
+end, { desc = 'Open the snippets for this file type' })
 
 -- diffview (this plugin is awesome for seeing historical changes)
 vim.keymap.set('n', '<leader>dvo', '<CMD>DiffviewOpen<CR>', { desc = 'Diff view open' })

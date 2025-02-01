@@ -898,27 +898,14 @@ require('lazy').setup {
   },
 
   {
-    'akinsho/toggleterm.nvim',
-    event = 'VeryLazy',
-    version = '*',
-    opts = {--[[ things you want to change go here]]
-    },
-  },
-
-  {
     'windwp/nvim-autopairs',
     event = 'InsertEnter',
     config = true,
-    -- use opts = {} for passing setup options
-    -- this is equalent to setup({}) function
   },
 
   {
     'norcalli/nvim-colorizer.lua',
   },
-
-  -- Theme switcher
-  { 'zaldih/themery.nvim' },
 
   {
     'rcarriga/nvim-dap-ui',
@@ -996,5 +983,27 @@ require('lazy').setup {
 
   {
     'theHamsta/nvim-dap-virtual-text',
+  },
+
+  -- nvim v0.8.0
+  {
+    'kdheepak/lazygit.nvim',
+    lazy = true,
+    cmd = {
+      'LazyGit',
+      'LazyGitConfig',
+      'LazyGitCurrentFile',
+      'LazyGitFilter',
+      'LazyGitFilterCurrentFile',
+    },
+    -- optional for floating window border decoration
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    -- setting the keybinding for LazyGit with 'keys' is recommended in
+    -- order to load the plugin when the command is run for the first time
+    keys = {
+      { '<leader>lg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
+    },
   },
 }
