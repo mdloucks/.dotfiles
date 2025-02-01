@@ -1,3 +1,6 @@
+local telescope = require 'telescope.builtin'
+local oil = require 'oil'
+
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
@@ -22,8 +25,6 @@ vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left wind
 vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-
-vim.keymap.set('n', '<leader>t', vim.cmd.UndotreeToggle)
 
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
@@ -103,3 +104,18 @@ vim.api.nvim_set_keymap('n', '<leader>di', ':lua require("dap").step_into()<CR>'
 vim.api.nvim_set_keymap('n', '<leader>do', ':lua require("dap").step_out()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>b', ':lua require("dap").toggle_breakpoint()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>ui', ':lua require("dapui").toggle()<CR>', { noremap = true, silent = true })
+
+-- live grep from the current working directory (of the current buffer)
+function grep_in_dir()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local oil_dir = oil.get_current_dir(bufnr)
+
+  if oil_dir then
+    telescope.live_grep { search_dirs = { oil_dir } }
+  else
+    local bufname = vim.api.nvim_buf_get_name(bufnr)
+    telescope.live_grep { search_dirs = { bufname } }
+  end
+end
+
+vim.api.nvim_set_keymap('n', '<leader>sd', '<cmd>lua grep_in_dir()<CR>', { noremap = true, silent = true })

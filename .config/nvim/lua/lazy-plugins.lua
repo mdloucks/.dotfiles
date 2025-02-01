@@ -119,7 +119,7 @@ require('lazy').setup {
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+      -- vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
@@ -467,7 +467,7 @@ require('lazy').setup {
           -- Manually trigger a completion from nvim-cmp.
           --  Generally you don't need this, because nvim-cmp will display
           --  completions whenever it has completion options available.
-          ['<C-Space>'] = cmp.mapping.complete {},
+          ['<C-j>'] = cmp.mapping.complete {},
 
           -- Think of <c-l> as moving to the right of your snippet expansion.
           --  So if you have a snippet that's like:
@@ -665,7 +665,7 @@ require('lazy').setup {
     opts = {
       dev_tools = {
         autostart = true, -- autostart devtools server if not detected
-        auto_open_browser = true, -- Automatically opens devtools in the browser
+        auto_open_browser = false, -- Automatically opens devtools in the browser
       },
 
       dev_log = {
@@ -961,6 +961,14 @@ require('lazy').setup {
           dartSdkPath = '/opt/flutter/bin/cache/dart-sdk/bin/dart', -- Ensure this is correct
           flutterSdkPath = '/opt/flutter/bin/flutter', -- Ensure this is correct
           program = '${workspaceFolder}/lib/main.dart', -- Ensure this is correct
+
+          program = function()
+            local flutter_tools = require('flutter-tools.config').get 'project'
+            if flutter_tools and flutter_tools.target then
+              return flutter_tools.target
+            end
+            return vim.fn.input('Path to main.dart: ', vim.fn.getcwd() .. '/lib/main.dart', 'file')
+          end,
           cwd = '${workspaceFolder}',
         },
       }
@@ -972,7 +980,13 @@ require('lazy').setup {
           name = 'Launch Flutter',
           dartSdkPath = '/opt/flutter/bin/cache/dart-sdk/bin/dart', -- Ensure this is correct
           flutterSdkPath = '/opt/flutter/bin/flutter', -- Ensure this is correct
-          program = '${workspaceFolder}/lib/main.dart', -- Ensure this is correct
+          program = function()
+            local flutter_tools = require('flutter-tools.config').get 'project'
+            if flutter_tools and flutter_tools.target then
+              return flutter_tools.target
+            end
+            return vim.fn.input('Path to main.dart: ', vim.fn.getcwd() .. '/lib/main.dart', 'file')
+          end,
           cwd = '${workspaceFolder}',
         },
       }
