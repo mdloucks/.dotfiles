@@ -25,8 +25,6 @@ local js = require 'luasnippets/javascript'
 luasnip.add_snippets('svelte', js)
 luasnip.add_snippets('typescript', js)
 
-vim.cmd 'Gitsigns toggle_current_line_blame'
-
 -- TODO: Put this in opts or something, not sure why there's an err
 require('nvim-treesitter.configs').setup {
 
