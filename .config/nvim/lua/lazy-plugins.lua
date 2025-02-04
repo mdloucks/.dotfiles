@@ -42,9 +42,6 @@ require('lazy').setup {
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-      {
-        'j-hui/fidget.nvim',
-      },
     },
 
     config = function()
@@ -323,18 +320,17 @@ require('lazy').setup {
     },
   },
 
-  -- Love this one, file explorer
   {
-    'stevearc/oil.nvim',
-    opts = {
-      view_options = {
-        show_hidden = true,
-      },
-      default_file_explorer = true,
-      skip_confirm_for_simple_edits = true,
-    },
-    -- Optional dependencies
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    'kelly-lin/ranger.nvim',
+    config = function()
+      require('ranger-nvim').setup { replace_netrw = true }
+      vim.api.nvim_set_keymap('n', '<leader>ef', '', {
+        noremap = true,
+        callback = function()
+          require('ranger-nvim').open(true)
+        end,
+      })
+    end,
   },
 
   -- This is nice, allows you to generate json tags from structs
@@ -364,28 +360,18 @@ require('lazy').setup {
     opts = {
       dev_tools = {
         autostart = true, -- autostart devtools server if not detected
-        auto_open_browser = false, -- Automatically opens devtools in the browser
       },
 
       dev_log = {
         enabled = false,
-        notify_errors = false, -- if there is an error whilst running then notify the user
+        notify_errors = true, -- if there is an error whilst running then notify the user
         open_cmd = '', -- command to use to open the log buffer
       },
       debugger = { -- integrate with nvim dap + install dart code debugger
         enabled = true,
-        -- if empty dap will not stop on any exceptions, otherwise it will stop on those specified
-        -- see |:help dap.set_exception_breakpoints()| for more info
         exception_breakpoints = {},
-        -- Whether to call toString() on objects in debug views like hovers and the
-        -- variables list.
-        -- Invoking toString() has a performance cost and may introduce side-effects,
-        -- although users may expected this functionality. null is treated like false.
         evaluate_to_string_in_debug_views = true,
         register_configurations = function(paths)
-          -- If you want to load .vscode launch.json automatically run the following:
-          -- require("dap.ext.vscode").load_launchjs()
-
           local dap = require 'dap'
 
           -- Register Dart configurations
@@ -418,133 +404,29 @@ require('lazy').setup {
     },
   },
 
-  -- Line at the bottom of the screen
   {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     opts = {
-
       options = {
         icons_enabled = true,
         theme = 'auto',
-        component_separators = { left = '', right = '' },
-        section_separators = { left = '', right = '' },
-        disabled_filetypes = {
-          statusline = {},
-          winbar = {},
-        },
-        ignore_focus = {},
-        always_divide_middle = true,
-        globalstatus = false,
-        refresh = {
-          statusline = 1000,
-          tabline = 1000,
-          winbar = 1000,
-        },
+        component_separators = { left = '|', right = '|' },
+        section_separators = { left = '', right = '' },
       },
       sections = {
-
-        lualine_a = {
-          {
-            'mode',
-            -- Truncate to only show one char
-            fmt = function(str)
-              return str:sub(1, 1)
-            end,
-          },
-        },
-
-        lualine_b = { {
-          'branch',
-          fmt = function(str)
-            return str:sub(1, 10)
-          end,
-        }, 'diagnostics' },
-        lualine_c = {},
-        lualine_x = {
-          {
-            'buffers',
-            show_filename_only = true, -- Shows shortened relative path when set to false.
-            hide_filename_extension = true, -- Hide filename extension when set to true.
-            show_modified_status = true, -- Shows indicator when the buffer is modified.
-
-            mode = 0, -- 0: Shows buffer name
-            -- 1: Shows buffer index
-            -- 2: Shows buffer name + buffer index
-            -- 3: Shows buffer number
-            -- 4: Shows buffer name + buffer number
-
-            max_length = vim.o.columns * 6 / 7, -- Maximum width of buffers component,
-
-            -- Automatically updates active buffer color to match color of other components (will be overidden if buffers_color is set)
-            use_mode_colors = true,
-
-            -- buffers_color = {
-            --   -- Same values as the general color option can be used here.
-            --   active = 'lualine_{section}_normal', -- Color for active buffer.
-            --   inactive = 'lualine_{section}_inactive', -- Color for inactive buffer.
-            -- },
-
-            buffers_color = {
-              active = { fg = '#ff9e64' }, -- Color for active buffers
-              inactive = { fg = '#5c6370' }, -- Color for inactive buffers
-            },
-
-            symbols = {
-              modified = ' ●', -- Text to show when the buffer is modified
-              alternate_file = '', -- Text to show to identify the alternate file
-              directory = '', -- Text to show when the buffer is a directory
-            },
-          },
-        },
-        -- lualine_x = { 'encoding', 'fileformat', 'filetype' },
-        lualine_z = {},
+        lualine_a = { 'mode' },
+        lualine_b = { 'branch', 'diff', 'diagnostics' },
+        lualine_c = { 'filename' },
+        lualine_x = { 'filetype' },
+        lualine_y = { 'progress' },
+        lualine_z = { 'location' },
       },
-      inactive_sections = {
-        lualine_a = {},
-        lualine_b = {},
-        lualine_c = {
-          {
-            'filename',
-          },
-        },
-        lualine_x = { 'location' },
-        lualine_y = {},
-        lualine_z = {},
+      tabline = {
+        lualine_a = { 'buffers' }, -- Buffers displayed at the top
+        lualine_b = { 'tabs' },
       },
-      tabline = {},
-      winbar = {},
-      inactive_winbar = {},
-      extensions = { 'oil', 'trouble', 'fugitive' },
-    },
-  },
-
-  -- Nice plugin that moves the colon commands to the center of the screen in a nice box
-  {
-    'VonHeikemen/fine-cmdline.nvim',
-    event = 'VeryLazy',
-    dependencies = {
-      { 'MunifTanjim/nui.nvim' },
-    },
-    opts = {
-
-      cmdline = {
-        prompt = '? ',
-      },
-      popup = {
-        position = {
-          row = '50%',
-          col = '50%',
-        },
-
-        border = {
-          style = 'single',
-          text = {
-            top = ' cmd ',
-            top_align = 'center',
-          },
-        },
-      },
+      extensions = { 'fugitive', 'nvim-tree', 'quickfix' },
     },
   },
 

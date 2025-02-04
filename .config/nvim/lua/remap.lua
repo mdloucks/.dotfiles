@@ -1,5 +1,5 @@
 local telescope = require 'telescope.builtin'
-local oil = require 'oil'
+-- local oil = require 'oil'
 
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
@@ -52,12 +52,8 @@ vim.keymap.set('n', '<leader>n', '<C-6>', { silent = true, noremap = true, desc 
 
 -- default :bd messes up a side split which is annoying for flutter
 
--- https://github.com/vonheikemen/fine-cmdline.nvim
-vim.api.nvim_set_keymap('n', '<CR>', '<cmd>FineCmdline<CR>', { noremap = true })
-vim.api.nvim_set_keymap('n', ':', '<cmd>FineCmdline<CR>', { noremap = true })
-
 -- Oil
-vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
+-- vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -105,17 +101,17 @@ vim.api.nvim_set_keymap('n', '<Leader>b', ':lua require("dap").toggle_breakpoint
 vim.api.nvim_set_keymap('n', '<Leader>ui', ':lua require("dapui").toggle()<CR>', { noremap = true, silent = true })
 
 -- live grep from the current working directory (of the current buffer)
-function grep_in_dir()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local oil_dir = oil.get_current_dir(bufnr)
-
-  if oil_dir then
-    telescope.live_grep { search_dirs = { oil_dir } }
-  else
-    local bufname = vim.api.nvim_buf_get_name(bufnr)
-    telescope.live_grep { search_dirs = { bufname } }
-  end
-end
+-- function grep_in_dir()
+--   local bufnr = vim.api.nvim_get_current_buf()
+--   local oil_dir = oil.get_current_dir(bufnr)
+--
+--   if oil_dir then
+--     telescope.live_grep { search_dirs = { oil_dir } }
+--   else
+--     local bufname = vim.api.nvim_buf_get_name(bufnr)
+--     telescope.live_grep { search_dirs = { bufname } }
+--   end
+-- end
 
 vim.api.nvim_set_keymap('n', '<leader>sd', '<cmd>lua grep_in_dir()<CR>', { noremap = true, silent = true })
 
