@@ -52,6 +52,10 @@ vim.keymap.set('n', '<leader>n', '<C-6>', { silent = true, noremap = true, desc 
 
 -- default :bd messes up a side split which is annoying for flutter
 
+vim.keymap.set('n', '<CR>', ':', { noremap = true, silent = false, desc = 'Open command mode' })
+
+vim.keymap.set('n', '<leader>n', '<C-6>', { silent = true, noremap = true, desc = 'Go back to previous buffer' })
+
 -- Oil
 -- vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
 
@@ -75,6 +79,8 @@ require('telescope').load_extension 'flutter'
 vim.keymap.set('n', '<leader>f', function()
   require('telescope').extensions.flutter.commands()
 end, { desc = 'Open the snippets for this file type' })
+
+vim.api.nvim_set_keymap('n', '<leader>br', ':silent !flutter pub run build_runner build --delete-conflicting-outputs &<CR>', { noremap = true, silent = true })
 
 -- Custom plugins :)
 
