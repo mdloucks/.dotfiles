@@ -321,6 +321,14 @@ require('lazy').setup {
   },
 
   {
+    'stevearc/oil.nvim',
+    config = function()
+      require('oil').setup()
+      vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
+    end,
+  },
+
+  {
     'kelly-lin/ranger.nvim',
     config = function()
       require('ranger-nvim').setup { replace_netrw = true }
@@ -349,7 +357,6 @@ require('lazy').setup {
     build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
   },
 
-  -- Need this for my work, great plugin though
   {
     'akinsho/flutter-tools.nvim',
     lazy = false,
@@ -364,7 +371,7 @@ require('lazy').setup {
 
       dev_log = {
         enabled = false,
-        notify_errors = true, -- if there is an error whilst running then notify the user
+        notify_errors = false, -- if there is an error whilst running then notify the user
         open_cmd = '', -- command to use to open the log buffer
       },
       debugger = { -- integrate with nvim dap + install dart code debugger
@@ -413,6 +420,7 @@ require('lazy').setup {
         theme = 'auto',
         component_separators = { left = '|', right = '|' },
         section_separators = { left = '', right = '' },
+        globalstatus = true,
       },
       sections = {
         lualine_a = { 'mode' },
@@ -423,8 +431,18 @@ require('lazy').setup {
         lualine_z = { 'location' },
       },
       tabline = {
-        lualine_a = { 'buffers' }, -- Buffers displayed at the top
-        lualine_b = { 'tabs' },
+
+        lualine_a = { 'tabs' },
+        lualine_c = {
+          {
+            'buffers',
+            show_filename_only = true, -- Shows full path if space allows
+            max_length = 170, -- Uses 2/3 of screen width
+            symbols = {
+              modified = ' ●', -- Indicator for modified buffers
+            },
+          },
+        },
       },
       extensions = { 'fugitive', 'nvim-tree', 'quickfix' },
     },
@@ -496,7 +514,21 @@ require('lazy').setup {
     'rcarriga/nvim-dap-ui',
     dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
     config = function()
-      require('dapui').setup()
+      require('dapui').setup {
+
+        layouts = {
+          {
+            elements = { 'scopes', 'breakpoints', 'stacks', 'watches' },
+            size = 40,
+            position = 'left',
+          },
+          {
+            elements = { 'repl' }, -- Remove "console" from here
+            size = 10,
+            position = 'bottom',
+          },
+        },
+      }
     end,
   },
 
@@ -582,7 +614,45 @@ require('lazy').setup {
       'LazyGitFilterCurrentFile',
     },
     keys = {
-      { '<leader>lg', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
+      { '<leader>g', '<cmd>LazyGit<cr>', desc = 'LazyGit' },
+    },
+  },
+
+  {
+    'folke/trouble.nvim',
+    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    cmd = 'Trouble',
+    keys = {
+      {
+        '<leader>xx',
+        '<cmd>Trouble diagnostics toggle<cr>',
+        desc = 'Diagnostics (Trouble)',
+      },
+      {
+        '<leader>xX',
+        '<cmd>Trouble diagnostics toggle filter.buf=0<cr>',
+        desc = 'Buffer Diagnostics (Trouble)',
+      },
+      {
+        '<leader>cs',
+        '<cmd>Trouble symbols toggle focus=false<cr>',
+        desc = 'Symbols (Trouble)',
+      },
+      {
+        '<leader>cl',
+        '<cmd>Trouble lsp toggle focus=false win.position=right<cr>',
+        desc = 'LSP Definitions / references / ... (Trouble)',
+      },
+      {
+        '<leader>xL',
+        '<cmd>Trouble loclist toggle<cr>',
+        desc = 'Location List (Trouble)',
+      },
+      {
+        '<leader>xQ',
+        '<cmd>Trouble qflist toggle<cr>',
+        desc = 'Quickfix List (Trouble)',
+      },
     },
   },
 }
