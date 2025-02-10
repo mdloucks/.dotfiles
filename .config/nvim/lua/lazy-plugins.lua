@@ -1,13 +1,11 @@
 require('lazy').setup {
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
-  -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
-
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
       current_line_blame = true,
+      attach_to_untracked = false,
     },
   },
 
@@ -45,27 +43,15 @@ require('lazy').setup {
     },
 
     config = function()
-      -- LSP servers and clients are able to communicate to each other what features they support.
-      --  By default, Neovim doesn't support everything that is in the LSP Specification.
-      --  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
-      --  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
-      -- Enable the following language servers
-      --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
-      --
-      --  Add any additional override configuration in the following tables. Available keys are:
-      --  - cmd (table): Override the default command used to start the server
-      --  - filetypes (table): Override the default list of associated filetypes for the server
-      --  - capabilities (table): Override fields in capabilities. Can be used to disable certain LSP features.
-      --  - settings (table): Override the default settings passed when initializing the server.
-      --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
         -- clangd = {},
         svelte = {},
         jsonls = {},
         bashls = {},
+        dcm = {},
         cssls = {
           filetypes = { 'css', 'pcss' },
         },
@@ -73,16 +59,10 @@ require('lazy').setup {
         docker_compose_language_service = {},
         html = {},
         htmx = {},
-        intelephense = {},
-        jdtls = {},
-        phpcbf = {},
         prettier = {},
         stylua = {},
         tailwindcss = {},
         lua_ls = {
-          -- cmd = {...},
-          -- filetypes { ...},
-          -- capabilities = {},
           settings = {
             Lua = {
               runtime = { version = 'LuaJIT' },
@@ -98,8 +78,6 @@ require('lazy').setup {
               completion = {
                 callSnippet = 'Replace',
               },
-              -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-              -- diagnostics = { disable = { 'missing-fields' } },
             },
           },
         },
@@ -116,7 +94,10 @@ require('lazy').setup {
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
+
+        automatic_installation = true,
         handlers = {
+
           function(server_name)
             local server = servers[server_name] or {}
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
@@ -137,7 +118,6 @@ require('lazy').setup {
       },
       formatters_by_ft = {
         lua = { 'stylua' },
-        javascript = { { 'prettierd', 'prettier' } },
       },
     },
   },
@@ -169,10 +149,6 @@ require('lazy').setup {
         },
         completion = { completeopt = 'menu,menuone,noinsert' },
 
-        -- For an understanding of why these mappings were
-        -- chosen, you will need to read `:help ins-completion`
-        --
-        -- No, but seriously. Please read `:help ins-completion`, it is really good!
         mapping = cmp.mapping.preset.insert {
           ['<C-n>'] = cmp.mapping.select_next_item(),
           ['<C-p>'] = cmp.mapping.select_prev_item(),
@@ -206,95 +182,35 @@ require('lazy').setup {
     end,
   },
 
-  -- Highlight todo, notes, etc in comments
-  { 'folke/todo-comments.nvim', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
-
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
     config = function()
-      -- Better Around/Inside textobjects
-      --
-      --
-      -- Examples:
-      --  - va)  - [V]isually select [A]round [)]paren
-      --  - yinq - [Y]ank [I]nside [N]ext [']quote
-      --  - ci'  - [C]hange [I]nside [']quote
       require('mini.ai').setup { n_lines = 500 }
-      -- require('mini.pairs').setup()
-      -- Startup screen
       require('mini.starter').setup()
-      -- Cool surrounding replacer, us sd and sr to replace surroundings
-      -- I replace the defaults because I'm using flash.nvim
+      require('mini.splitjoin').setup()
       require('mini.surround').setup {
         custom_surroundings = nil,
         highlight_duration = 500,
         mappings = {
           add = '<C-s>a', -- Control + s + a
           delete = '<C-s>d', -- Control + s + d
-          find = '<C-s>f', -- Control + s + f
-          find_left = '<C-s>F', -- Control + s + F
-          highlight = '<C-s>h', -- Control + s + h
           replace = '<C-s>r', -- Control + s + r
-          update_n_lines = '<C-s>n', -- Control + s + n
-          suffix_last = 'l', -- Suffix for searching
-          suffix_next = 'n', -- Suffix for searching
         },
       }
       -- Cool scope highlinging animation
       require('mini.indentscope').setup()
-      -- Split and join lists/tables
-      require('mini.splitjoin').setup()
-
-      -- Add/delete/replace surroundings (brackets, quotes, etc.)
-      --
-      -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-      -- - sd'   - [S]urround [D]elete [']quotes
-      -- - sr)'  - [S]urround [R]eplace [)] [']
-
-      -- ... and there is more!
-      --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
 
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate',
     config = function()
-      -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup {
-        ensure_installed = { 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc' },
-        -- Autoinstall languages that are not installed
         auto_install = true,
         highlight = { enable = true },
-        indent = {
-          enable = true,
-
-          -- NOTE: enabling indentation significantly slows down editing in Dart files
-          -- https://github.com/akinsho/flutter-tools.nvim/issues/267
-          disable = { 'dart' },
-        },
-
-        textobjects = {
-          swap = {
-            enable = true,
-            swap_next = {
-              ['<leader>a'] = '@parameter.inner',
-            },
-            swap_previous = {
-              ['<leader>A'] = '@parameter.inner',
-            },
-          },
-        },
       }
 
-      -- There are additional nvim-treesitter modules that you can use to interact
-      -- with nvim-treesitter. You should go explore a few and see what interests you:
-      --
-      --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-      --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-      --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
       require('nvim-ts-autotag').setup()
     end,
     dependencies = { 'windwp/nvim-ts-autotag' },
@@ -303,22 +219,6 @@ require('lazy').setup {
   -- MY PLUGINS --------------------------------------------
   -- MY PLUGINS --------------------------------------------
   -- MY PLUGINS --------------------------------------------
-
-  {
-
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-    event = 'VeryLazy',
-    'folke/trouble.nvim',
-    opts = {}, -- for default options, refer to the configuration section for custom setup.
-    cmd = 'Trouble',
-    keys = {
-      {
-        '<leader>xx',
-        '<cmd>TroubleToggle<cr>',
-        desc = 'Diagnostics (Trouble)',
-      },
-    },
-  },
 
   {
     'stevearc/oil.nvim',
@@ -387,8 +287,9 @@ require('lazy').setup {
               type = 'dart',
               request = 'launch',
               name = 'Launch Dart',
-              dartSdkPath = '/opt/flutter/bin/cache/dart-sdk/bin/dart', -- Ensure this is correct
-              flutterSdkPath = '/opt/flutter/bin/flutter', -- Ensure this is correct
+              dartSdkPath = '/opt/homebrew/bin/dart',
+              -- dartSdkPath = '/opt/flutter/bin/cache/dart-sdk/bin/dart', -- Ensure this is correct
+              flutterSdkPath = '$HOME/development/flutter/bin', -- Ensure this is correct
               program = '${workspaceFolder}/lib/main.dart', -- Ensure this is correct
               cwd = '${workspaceFolder}',
             },
@@ -400,8 +301,9 @@ require('lazy').setup {
               type = 'flutter',
               request = 'launch',
               name = 'Launch Flutter',
-              dartSdkPath = '/opt/flutter/bin/cache/dart-sdk/bin/dart', -- Ensure this is correct
-              flutterSdkPath = '/opt/flutter/bin/flutter', -- Ensure this is correct
+              dartSdkPath = '/opt/homebrew/bin/dart',
+              dartSdkPath = '/opt/flutter/bin/flutter', -- Ensure this is correct
+              flutterSdkPath = '$HOME/development/flutter/bin', -- Ensure this is correct
               program = '${workspaceFolder}/lib/main.dart', -- Ensure this is correct
               cwd = '${workspaceFolder}',
             },
@@ -489,10 +391,6 @@ require('lazy').setup {
       suppressed_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
       -- log_level = 'debug',
     },
-  },
-
-  {
-    'sindrets/diffview.nvim',
   },
 
   {
@@ -602,7 +500,6 @@ require('lazy').setup {
     'theHamsta/nvim-dap-virtual-text',
   },
 
-  -- nvim v0.8.0
   {
     'kdheepak/lazygit.nvim',
     lazy = true,
