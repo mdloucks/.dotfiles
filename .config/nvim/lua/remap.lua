@@ -30,8 +30,6 @@ vim.keymap.set('v', '<C-j>', ":m '>+1<CR>gv=gv", { noremap = true, silent = true
 vim.keymap.set('n', 'n', 'nzzzv', { noremap = true, silent = true })
 vim.keymap.set('n', 'N', 'Nzzzv', { noremap = true, silent = true })
 
--- vim.keymap.set('n', '<leader>x', ':!chmod +x %<CR>', { noremap = true, silent = true })
-
 -- Save session
 -- vim.keymap.set('n', '<C-s>', ':mksession<CR>', { noremap = true, silent = true })
 
@@ -44,23 +42,14 @@ vim.keymap.set('n', '<C-p>', '<cmd>bprevious<CR>', { noremap = true, silent = tr
 
 vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', { noremap = true, silent = true })
 
--- go back from buffer
-vim.keymap.set('n', '<leader>n', '<C-6>', { silent = true, noremap = true, desc = 'Go back to previous buffer' })
-
 vim.keymap.set('n', '<CR>', ':', { noremap = true, silent = false, desc = 'Open command mode' })
 
 require('telescope').load_extension 'flutter'
 vim.keymap.set('n', '<leader>f', function()
   require('telescope').extensions.flutter.commands()
-end, { desc = 'Open the snippets for this file type' })
+end, { desc = 'Open the flutter command pallete' })
 
 vim.api.nvim_set_keymap('n', '<leader>br', ':silent !flutter pub run build_runner build --delete-conflicting-outputs &<CR>', { noremap = true, silent = true })
-
--- Custom plugins :)
-
-vim.keymap.set('n', 'ss', function()
-  require('OpenSnippets').open_snippet()
-end, { desc = 'Open the snippets for this file type' })
 
 -- Delete all buffers, don't show output
 vim.keymap.set('n', 'bda', '<CMD>silent! bufdo bd<CR>', { desc = 'Delete all buffers' })
@@ -142,3 +131,15 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
   end,
 })
+
+function replace_buffer_with_definition()
+  vim.cmd 'update'
+  local current_buf = vim.api.nvim_get_current_buf()
+  vim.lsp.buf.definition()
+
+  vim.defer_fn(function()
+    vim.cmd('bdelete ' .. current_buf)
+  end, 100)
+end
+
+vim.api.nvim_set_keymap('n', 'gj', '<cmd>lua replace_buffer_with_definition()<CR>', { noremap = true, silent = true })
