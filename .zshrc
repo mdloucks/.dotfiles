@@ -171,3 +171,5 @@ source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
 
 export PATH="/opt/homebrew/opt/dart@3.7.2/bin:$PATH"
+
+. "$HOME/.local/bin/env"
