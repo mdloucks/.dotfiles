@@ -30,12 +30,17 @@ vim.keymap.set('v', '<C-j>', ":m '>+1<CR>gv=gv", { noremap = true, silent = true
 vim.keymap.set('n', 'n', 'nzzzv', { noremap = true, silent = true })
 vim.keymap.set('n', 'N', 'Nzzzv', { noremap = true, silent = true })
 
+-- qol remaps
+vim.keymap.set('n', '<leader>we', '<cmd>wa<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', ';', ':', { noremap = true, silent = true })
+
 -- Save session
 -- vim.keymap.set('n', '<C-s>', ':mksession<CR>', { noremap = true, silent = true })
 
 -- black hole buffer
 vim.keymap.set('n', '<C-g>', '"_d', { noremap = true, silent = true })
 vim.keymap.set('v', '<C-g>', '"_d', { noremap = true, silent = true })
+vim.keymap.set('v', '<leader>p', '"_dP')
 
 vim.keymap.set('n', '<C-n>', '<cmd>bnext<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<C-p>', '<cmd>bprevious<CR>', { noremap = true, silent = true })
@@ -49,7 +54,8 @@ vim.keymap.set('n', '<leader>f', function()
   require('telescope').extensions.flutter.commands()
 end, { desc = 'Open the flutter command pallete' })
 
-vim.api.nvim_set_keymap('n', '<leader>br', ':silent !flutter pub run build_runner build --delete-conflicting-outputs &<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>br',
+  ':silent !flutter pub run build_runner build --delete-conflicting-outputs &<CR>', { noremap = true, silent = true })
 
 -- Delete all buffers, don't show output
 vim.keymap.set('n', 'bda', '<CMD>silent! bufdo bd<CR>', { desc = 'Delete all buffers' })
@@ -58,7 +64,8 @@ vim.api.nvim_set_keymap('n', '<leader>dc', ':lua require("dap").continue()<CR>',
 vim.api.nvim_set_keymap('n', '<leader>do', ':lua require("dap").step_over()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>di', ':lua require("dap").step_into()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>do', ':lua require("dap").step_out()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>b', ':lua require("dap").toggle_breakpoint()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>b', ':lua require("dap").toggle_breakpoint()<CR>',
+  { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>ui', ':lua require("dapui").toggle()<CR>', { noremap = true, silent = true })
 
 function grep_in_dir()

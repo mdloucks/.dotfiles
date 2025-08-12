@@ -73,3 +73,11 @@ vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
 
 -- enable :exrc
 vim.opt.exrc = true
+
+-- Disable auto comment continuation
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = '*',
+  callback = function()
+    vim.opt.formatoptions:remove { 'c', 'r', 'o' }
+  end,
+})

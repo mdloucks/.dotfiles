@@ -1,6 +1,7 @@
 require('lazy').setup {
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
+
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
     opts = {
@@ -36,22 +37,22 @@ require('lazy').setup {
   {
     'neovim/nvim-lspconfig',
     dependencies = {
-      -- Automatically install LSPs and related tools to stdpath for neovim
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
     },
 
     config = function()
+      local lspconfig = require 'lspconfig'
+      local mason_lspconfig = require 'mason-lspconfig'
+
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
       local servers = {
-        -- clangd = {},
         svelte = {},
         jsonls = {},
         bashls = {},
-        dcm = {},
         cssls = {
           filetypes = { 'css', 'pcss' },
         },
@@ -59,8 +60,8 @@ require('lazy').setup {
         docker_compose_language_service = {},
         html = {},
         htmx = {},
-        prettier = {},
-        stylua = {},
+        -- prettier = {},
+        -- stylua = {},
         tailwindcss = {},
         lua_ls = {
           settings = {
@@ -68,8 +69,6 @@ require('lazy').setup {
               runtime = { version = 'LuaJIT' },
               workspace = {
                 checkThirdParty = false,
-                -- Tells lua_ls where to find all the Lua files that you have loaded
-                -- for your neovim configuration.
                 library = {
                   '${3rd}/luv/library',
                   unpack(vim.api.nvim_get_runtime_file('', true)),
@@ -83,27 +82,27 @@ require('lazy').setup {
         },
       }
 
+      -- Set up mason and mason-tool-installer
       require('mason').setup()
 
-      -- You can add other tools here that you want Mason to install
-      -- for you, so that they are available from within Neovim.
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format lua code
-      })
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      local ensure_installed = vim.tbl_keys(servers)
 
-      require('mason-lspconfig').setup {
+      require('mason-tool-installer').setup {
+        ensure_installed = ensure_installed,
+      }
 
+      -- Set up LSPs with handler
+      mason_lspconfig.setup {
+        ensure_installed = ensure_installed,
         automatic_installation = true,
-        handlers = {
+      }
 
-          function(server_name)
-            local server = servers[server_name] or {}
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
+      mason_lspconfig.setup {
+        function(server_name)
+          local server_opts = servers[server_name] or {}
+          server_opts.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server_opts.capabilities or {})
+          lspconfig[server_name].setup(server_opts)
+        end,
       }
     end,
   },
@@ -116,9 +115,7 @@ require('lazy').setup {
         timeout_ms = 500,
         lsp_fallback = true,
       },
-      formatters_by_ft = {
-        lua = { 'stylua' },
-      },
+      formatters_by_ft = {},
     },
   },
 
@@ -192,8 +189,8 @@ require('lazy').setup {
         custom_surroundings = nil,
         highlight_duration = 500,
         mappings = {
-          add = '<C-s>a', -- Control + s + a
-          delete = '<C-s>d', -- Control + s + d
+          add = '<C-s>a',     -- Control + s + a
+          delete = '<C-s>d',  -- Control + s + d
           replace = '<C-s>r', -- Control + s + r
         },
       }
@@ -244,61 +241,6 @@ require('lazy').setup {
     build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
   },
 
-  {
-    'akinsho/flutter-tools.nvim',
-    lazy = false,
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-      'stevearc/dressing.nvim', -- optional for vim.ui.select
-    },
-    opts = {
-      dev_tools = {
-        autostart = true, -- autostart devtools server if not detected
-      },
-
-      dev_log = {
-        enabled = false,
-        notify_errors = false, -- if there is an error whilst running then notify the user
-        open_cmd = '', -- command to use to open the log buffer
-      },
-      debugger = { -- integrate with nvim dap + install dart code debugger
-        enabled = true,
-        exception_breakpoints = {},
-        evaluate_to_string_in_debug_views = true,
-        register_configurations = function(paths)
-          local dap = require 'dap'
-
-          -- Register Dart configurations
-          dap.configurations.dart = {
-            {
-              type = 'dart',
-              request = 'launch',
-              name = 'Launch Dart',
-              dartSdkPath = '/opt/homebrew/bin/dart',
-              -- dartSdkPath = '/opt/flutter/bin/cache/dart-sdk/bin/dart', -- Ensure this is correct
-              flutterSdkPath = '$HOME/development/flutter/bin', -- Ensure this is correct
-              program = '${workspaceFolder}/lib/main.dart', -- Ensure this is correct
-              cwd = '${workspaceFolder}',
-            },
-          }
-
-          -- Register Flutter configurations
-          dap.configurations.flutter = {
-            {
-              type = 'flutter',
-              request = 'launch',
-              name = 'Launch Flutter',
-              dartSdkPath = '/opt/homebrew/bin/dart',
-              dartSdkPath = '/opt/flutter/bin/flutter', -- Ensure this is correct
-              flutterSdkPath = '$HOME/development/flutter/bin', -- Ensure this is correct
-              program = '${workspaceFolder}/lib/main.dart', -- Ensure this is correct
-              cwd = '${workspaceFolder}',
-            },
-          }
-        end,
-      },
-    },
-  },
 
   {
     'nvim-lualine/lualine.nvim',
@@ -334,31 +276,6 @@ require('lazy').setup {
         },
       },
       extensions = { 'fugitive', 'nvim-tree', 'quickfix' },
-    },
-  },
-
-  {
-    'folke/flash.nvim',
-    event = 'VeryLazy',
-    keys = {
-      {
-        's',
-        mode = { 'n', 'x', 'o' },
-        function()
-          -- always center screen on jump
-          require('flash').jump()
-          vim.cmd 'normal! zz'
-        end,
-        desc = 'Flash',
-      },
-      {
-        'S',
-        mode = { 'n', 'x', 'o' },
-        function()
-          require('flash').treesitter()
-        end,
-        desc = 'Flash Treesitter',
-      },
     },
   },
 
@@ -411,6 +328,110 @@ require('lazy').setup {
   },
 
   {
+    'akinsho/flutter-tools.nvim',
+    version = 'v1.14.0',
+    lazy = false,
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'stevearc/dressing.nvim', -- optional for vim.ui.select
+    },
+    opts = {
+      dev_tools = {
+        autostart = true, -- autostart devtools server if not detected
+      },
+
+      dev_log = {
+        enabled = false,
+        notify_errors = false, -- if there is an error whilst running then notify the user
+        open_cmd = '',         -- command to use to open the log buffer
+      },
+      debugger = {             -- integrate with nvim dap + install dart code debugger
+        enabled = true,
+        exception_breakpoints = {},
+        evaluate_to_string_in_debug_views = true,
+        register_configurations = function(paths)
+          local dap = require 'dap'
+          dap.defaults.flutter = { exception_breakpoints = {} }
+
+          -- NOTE: If something is ever wrong, it is likely to do with this section. This controls
+          -- where your actual binaries live
+          dap.configurations.dart = {
+            {
+              type = "flutter",
+              request = "launch",
+              name = "Launch flutter",
+              dartSdkPath = "$HOME/fvm/default/bin/flutter",
+              flutterSdkPath = "$HOME/fvm/default/bin/flutter",
+              program = "${workspaceFolder}/lib/main.dart", -- ensure this is correct
+              cwd = "${workspaceFolder}",
+              exception_breakpoints = {}
+            }
+          }
+        end,
+      },
+    },
+  },
+
+  {
+    'mfussenegger/nvim-dap',
+    commit = '6a5bba0',
+    dependencies = { 'theHamsta/nvim-dap-virtual-text' },
+    config = function()
+      require('dap').defaults.dart.exception_breakpoints = {} -- Disable exception breakpoints globally
+      require('dap').adapters.flutter = {
+        type = 'executable',
+        command = 'flutter', -- Adjust this if using FVM
+        args = { 'debug_adapter' },
+        options = {
+          detached = false,
+        },
+      }
+
+      -- DAP configurations for Dart and Flutter
+      require('dap').configurations.dart = {
+        {
+          type = 'flutter', -- Set to "flutter" for default
+          request = 'launch',
+          name = 'Launch Flutter',
+          dartSdkPath = '/opt/flutter/bin/cache/dart-sdk/bin/dart',          -- Ensure this is correct
+          flutterSdkPath = '/Users/mloucks/development/flutter/bin/flutter', -- Ensure this is correct
+          program = '${workspaceFolder}/lib/main.dart',                      -- Ensure this is correct
+
+          program = function()
+            local flutter_tools = require('flutter-tools.config').get 'project'
+            if flutter_tools and flutter_tools.target then
+              return flutter_tools.target
+            end
+            return vim.fn.input('Path to main.dart: ', vim.fn.getcwd() .. '/lib/main.dart', 'file')
+          end,
+          cwd = '${workspaceFolder}',
+          exception_breakpoints = {} -- Disable exception breakpoints here for Flutter
+        },
+      }
+
+      require('dap').configurations.flutter = {
+        {
+          type = 'flutter', -- Set to "flutter" for default
+          request = 'launch',
+          name = 'Launch Flutter',
+          dartSdkPath = '/opt/flutter/bin/cache/dart-sdk/bin/dart',          -- Ensure this is correct
+          flutterSdkPath = '/Users/mloucks/development/flutter/bin/flutter', -- Ensure this is correct
+          program = function()
+            local flutter_tools = require('flutter-tools.config').get 'project'
+            if flutter_tools and flutter_tools.target then
+              return flutter_tools.target
+            end
+            return vim.fn.input('Path to main.dart: ', vim.fn.getcwd() .. '/lib/main.dart', 'file')
+          end,
+          cwd = '${workspaceFolder}',
+          exception_breakpoints = {} -- Disable exception breakpoints here for Flutter
+        },
+      }
+    end,
+    event = 'VimEnter', -- Ensure early loading
+  },
+
+  {
     'rcarriga/nvim-dap-ui',
     dependencies = { 'mfussenegger/nvim-dap', 'nvim-neotest/nvim-nio' },
     config = function()
@@ -430,72 +451,6 @@ require('lazy').setup {
         },
       }
     end,
-  },
-
-  {
-    'mfussenegger/nvim-dap',
-    dependencies = { 'theHamsta/nvim-dap-virtual-text' },
-    config = function()
-      -- Configure DAP adapters for Dart and Flutter
-
-      require('dap').adapters.dart = {
-        type = 'executable',
-        command = 'dart', -- Adjust this if using FVM
-        args = { 'debug_adapter' },
-        options = {
-          detached = false,
-        },
-      }
-
-      require('dap').adapters.flutter = {
-        type = 'executable',
-        command = 'flutter', -- Adjust this if using FVM
-        args = { 'debug_adapter' },
-        options = {
-          detached = false,
-        },
-      }
-
-      -- DAP configurations for Dart and Flutter
-      require('dap').configurations.dart = {
-        {
-          type = 'dart',
-          request = 'launch',
-          name = 'Launch Dart',
-          dartSdkPath = '/opt/flutter/bin/cache/dart-sdk/bin/dart', -- Ensure this is correct
-          flutterSdkPath = '/opt/flutter/bin/flutter', -- Ensure this is correct
-          program = '${workspaceFolder}/lib/main.dart', -- Ensure this is correct
-
-          program = function()
-            local flutter_tools = require('flutter-tools.config').get 'project'
-            if flutter_tools and flutter_tools.target then
-              return flutter_tools.target
-            end
-            return vim.fn.input('Path to main.dart: ', vim.fn.getcwd() .. '/lib/main.dart', 'file')
-          end,
-          cwd = '${workspaceFolder}',
-        },
-      }
-
-      require('dap').configurations.flutter = {
-        {
-          type = 'flutter',
-          request = 'launch',
-          name = 'Launch Flutter',
-          dartSdkPath = '/opt/flutter/bin/cache/dart-sdk/bin/dart', -- Ensure this is correct
-          flutterSdkPath = '/opt/flutter/bin/flutter', -- Ensure this is correct
-          program = function()
-            local flutter_tools = require('flutter-tools.config').get 'project'
-            if flutter_tools and flutter_tools.target then
-              return flutter_tools.target
-            end
-            return vim.fn.input('Path to main.dart: ', vim.fn.getcwd() .. '/lib/main.dart', 'file')
-          end,
-          cwd = '${workspaceFolder}',
-        },
-      }
-    end,
-    event = 'VimEnter', -- Ensure early loading
   },
 
   {
@@ -553,14 +508,5 @@ require('lazy').setup {
         desc = 'Quickfix List (Trouble)',
       },
     },
-  },
-
-  {
-    'iamcco/markdown-preview.nvim',
-    cmd = { 'MarkdownPreviewToggle', 'MarkdownPreview', 'MarkdownPreviewStop' },
-    ft = { 'markdown' },
-    build = function()
-      vim.fn['mkdp#util#install']()
-    end,
   },
 }
