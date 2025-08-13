@@ -40,7 +40,6 @@ vim.opt.signcolumn = 'yes'
 
 -- Decrease update time
 vim.opt.updatetime = 250
-vim.opt.timeoutlen = 300
 
 -- Configure how new splits should be opened
 vim.opt.splitright = true
@@ -52,6 +51,7 @@ vim.opt.splitbelow = true
 vim.opt.list = true
 vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 vim.opt.tabstop = 4
+vim.o.expandtab       = true
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -61,6 +61,12 @@ vim.opt.inccommand = 'split'
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 12
+
+vim.o.autoindent      = true      -- copy indent from current line when starting a new line
+vim.o.smartindent     = true      -- do smart autoindenting when starting a new line
+
+vim.o.shiftwidth      = 2         -- size of indent
+vim.o.tabstop         = 2         -- number of spaces tabs count for
 
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
