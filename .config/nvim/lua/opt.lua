@@ -1,89 +1,66 @@
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
 
--- [[ Setting options ]]
--- See `:help vim.opt`
--- NOTE: You can change these options as you wish!
---  For more options, you can see `:help option-list`
+vim.g.mapleader = ' '       -- Set <Space> as the global leader key
+vim.g.maplocalleader = ' '  -- Set <Space> as the local leader key
 
--- Make line numbers default
-vim.opt.number = true
--- You can also add relative line numbers, for help with jumping.
---  Experiment for yourself to see if you like it!
-vim.opt.relativenumber = true
+-- Line numbering
+vim.opt.number = true            -- Show absolute line numbers
+vim.opt.relativenumber = true    -- Show relative line numbers for easier movement
 
--- Enable mouse mode, can be useful for resizing splits for example!
-vim.opt.mouse = 'a'
+-- Mouse
+vim.opt.mouse = 'a'              -- Enable mouse support in all modes
 
--- Don't show the mode, since it's already in status line
-vim.opt.showmode = false
+-- UI feedback
+vim.opt.showmode = false         -- Don't show current mode (already visible in statusline)
 
--- Sync clipboard between OS and Neovim.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
-vim.opt.clipboard = 'unnamedplus'
+-- Clipboard
+vim.opt.clipboard = 'unnamedplus' -- Sync Neovim and system clipboard
 
--- Enable break indent
-vim.opt.breakindent = true
+-- Undo & Swap
+vim.opt.undofile = true          -- Enable persistent undo history
+vim.opt.swapfile = false         -- Disable swap file creation
 
-vim.opt.swapfile = false
+-- Indentation
+vim.opt.breakindent = true       -- Indent wrapped lines to match normal indentation
+vim.o.autoindent = true          -- Copy indent from current line when starting a new one
+vim.o.smartindent = true         -- Auto-indent based on syntax/context
+vim.o.expandtab = true           -- Use spaces instead of tabs
+vim.opt.tabstop = 4              -- Display tab characters as 4 spaces (used for visual alignment)
+vim.o.tabstop = 2                -- Actual tab character is worth 2 spaces (override for consistency)
+vim.o.shiftwidth = 2             -- Indent by 2 spaces when using >> or <<
 
--- Save undo history
-vim.opt.undofile = true
+-- Search behavior
+vim.opt.ignorecase = true        -- Ignore case in search by default
+vim.opt.smartcase = true         -- Use case-sensitive search if uppercase letters are used
+vim.opt.hlsearch = true          -- Highlight search matches
 
--- Case-insensitive searching UNLESS \C or capital in search
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
+-- Splits
+vim.opt.splitright = true        -- Vertical splits open to the right
+vim.opt.splitbelow = true        -- Horizontal splits open below
 
--- Keep signcolumn on by default
-vim.opt.signcolumn = 'yes'
+-- Sign column
+vim.opt.signcolumn = 'yes'       -- Always show sign column to avoid text shifting
 
--- Decrease update time
-vim.opt.updatetime = 250
+-- Cursor & scroll
+vim.opt.scrolloff = 12           -- Keep at least 12 lines above/below the cursor
+-- vim.opt.cursorline = true      -- (Optional) highlight the current line
 
--- Configure how new splits should be opened
-vim.opt.splitright = true
-vim.opt.splitbelow = true
+-- Completion
+vim.opt.completeopt = { "menuone", "noselect", "noinsert" } -- Better completion experience
 
--- Sets how neovim will display certain whitespace in the editor.
---  See `:help 'list'`
---  and `:help 'listchars'`
-vim.opt.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
-vim.opt.tabstop = 4
-vim.o.expandtab       = true
+-- Command preview
+vim.opt.inccommand = 'split'     -- Live preview for :%s substitutions
 
--- Preview substitutions live, as you type!
-vim.opt.inccommand = 'split'
+-- Whitespace display
+vim.opt.list = true              -- Enable display of whitespace characters
+vim.opt.listchars = {            -- Customize display of whitespace
+  tab = '» ',                    -- Tab character
+  trail = '·',                   -- Trailing spaces
+  nbsp = '␣'                     -- Non-breaking spaces
+}
 
--- Show which line your cursor is on
--- vim.opt.cursorline = true
+-- Performance
+vim.opt.updatetime = 250         -- Faster trigger for CursorHold/autocompletion
 
--- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 12
+-- Local config
+vim.opt.exrc = true              -- Allow project-specific `.exrc` files (use with caution)
 
-vim.o.autoindent      = true      -- copy indent from current line when starting a new line
-vim.o.smartindent     = true      -- do smart autoindenting when starting a new line
-
-vim.o.shiftwidth      = 2         -- size of indent
-vim.o.tabstop         = 2         -- number of spaces tabs count for
-
--- [[ Basic Keymaps ]]
---  See `:help vim.keymap.set()`
-
--- Set highlight on search, but clear on pressing <Esc> in normal mode
-vim.opt.hlsearch = true
-
-vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
-vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
-
--- enable :exrc
-vim.opt.exrc = true
-
--- Disable auto comment continuation
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = '*',
-  callback = function()
-    vim.opt.formatoptions:remove { 'c', 'r', 'o' }
-  end,
-})
