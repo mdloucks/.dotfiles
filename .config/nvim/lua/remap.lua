@@ -1,17 +1,54 @@
 -- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
-vim.keymap.set('n', '[e', function() vim.diagnostic.goto_prev { severity = vim.diagnostic.severity.ERROR } end, { desc = 'Go to previous [E]rror' })
-vim.keymap.set('n', ']e', function() vim.diagnostic.goto_next { severity = vim.diagnostic.severity.ERROR } end, { desc = 'Go to next [E]rror' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
--- Window navigation
-vim.keymap.set({ 'n', 't' }, '<C-h>', '<C-\\><C-n><C-w>h', { desc = 'Move focus to the left window' })
-vim.keymap.set({ 'n', 't' }, '<C-l>', '<C-\\><C-n><C-w>l', { desc = 'Move focus to the right window' })
-vim.keymap.set({ 'n', 't' }, '<C-j>', '<C-\\><C-n><C-w>j', { desc = 'Move focus to the lower window' })
-vim.keymap.set({ 'n', 't' }, '<C-k>', '<C-\\><C-n><C-w>k', { desc = 'Move focus to the upper window' })
-vim.api.nvim_set_keymap('t', '<Esc>', '<C-\\><C-n>', { noremap = true, silent = true })
+-- Diagnostic keymaps on LSP attach
+vim.api.nvim_create_autocmd('LspAttach', {
+  desc = 'LSP diagnostics keymaps',
+  callback = function(event)
+    local opts = { buffer = event.buf, noremap = true, silent = true }
+
+    -- Open diagnostic float at cursor
+    vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, opts)
+
+    -- Go to next/prev diagnostic
+    vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+    vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+
+    -- Go to next/prev error only
+    vim.keymap.set('n', '[e', function()
+      vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })
+    end, opts)
+
+    vim.keymap.set('n', ']e', function()
+      vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })
+    end, opts)
+
+    -- Populate location list with only errors
+    vim.keymap.set('n', '<leader>fl', function()
+      vim.diagnostic.setloclist({ severity = vim.diagnostic.severity.ERROR })
+    end, opts)
+
+    -- Populate quickfix list with only errors
+    vim.keymap.set('n', '<leader>fg', function()
+      vim.diagnostic.setqflist({ severity = vim.diagnostic.severity.ERROR })
+    end, opts)
+  end,
+})
+
+
+-- copy current file to clipboard
+-- :let @+ = expand('%:p')
+
+vim.keymap.set("n", "<leader>gb", function()
+  local file = vim.fn.expand("%")
+  local line = vim.fn.line(".")
+  vim.cmd("!" .. "git blame -L " .. line .. ",+1 " .. file)
+end, { desc = "Git blame current line" })
+
+vim.keymap.set('n', '<C-h>', vim.cmd.cprev)
+vim.keymap.set('n', '<C-l>', vim.cmd.cnext)
+
+-- Optional: map <Esc> in terminal mode to return to normal mode
+vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { noremap = true, silent = true })
 
 -- Scrolling and centering
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
@@ -34,7 +71,8 @@ vim.keymap.set("n", "<leader>t", "<cmd>x<cr>", { desc = "Write & Quit" })
 vim.keymap.set('n', '<leader>we', '<cmd>wa<CR>', { noremap = true, silent = true })
 
 -- Flutter-specific
-vim.api.nvim_set_keymap('n', '<leader>br', ':silent !flutter pub run build_runner build --delete-conflicting-outputs &<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>br',
+  ':silent !flutter pub run build_runner build --delete-conflicting-outputs &<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>fs', '<cmd>FlutterRun<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>fr', '<cmd>FlutterRestart<CR>', { noremap = true, silent = true })
 
@@ -42,7 +80,8 @@ vim.api.nvim_set_keymap('n', '<leader>fr', '<cmd>FlutterRestart<CR>', { noremap 
 vim.api.nvim_set_keymap('n', '<leader>dc', ':lua require("dap").continue()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>do', ':lua require("dap").step_over()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>di', ':lua require("dap").step_into()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<Leader>b', ':lua require("dap").toggle_breakpoint()<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>b', ':lua require("dap").toggle_breakpoint()<CR>',
+  { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<Leader>ui', ':lua require("dapui").toggle()<CR>', { noremap = true, silent = true })
 
 -- LSP actions (on attach)
@@ -54,7 +93,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
 
     map("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
-    map("gr", vim.lsp.buf.references, "[G]oto [R]eferences")
+    -- map("gr", vim.lsp.buf.references, "[G]oto [R]eferences")
+
+
+    -- LSP references via fzf-lua instead of quickfix
+    vim.keymap.set("n", "gr", function()
+      require("fzf-lua").lsp_references()
+    end, { silent = true, desc = "LSP references (fzf-lua)" })
     map("gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
     map("<leader>D", vim.lsp.buf.type_definition, "Type [D]efinition")
     map("<leader>ds", vim.lsp.buf.document_symbol, "[D]ocument [S]ymbols")
@@ -88,12 +133,9 @@ vim.keymap.set("i", "<C-j>", vim.lsp.completion.get, { desc = "Trigger completio
 vim.keymap.set("n", "<leader>sf", "<cmd>FzfLua files<CR>", { desc = "Find files" })
 vim.keymap.set("n", "<leader>sg", "<cmd>FzfLua live_grep<CR>", { desc = "Live grep" })
 
--- Escape utility
-vim.keymap.set({ "n", "i", "s" }, "<esc>", function()
-  vim.snippet.stop()
-  vim.cmd "noh"
-  return "<esc>"
-end, { expr = true, desc = "Escape+" })
+vim.keymap.set("n", "<leader>sn", function()
+  require("fzf-lua").files({ cwd = vim.fn.expand("~/.config/nvim") })
+end, { desc = "Find nvim config" })
 
 -- Black hole deletes
 vim.keymap.set('n', '<C-g>', '"_d', { noremap = true, silent = true })
@@ -103,7 +145,6 @@ vim.keymap.set('v', '<leader>p', '"_dP')
 -- Misc
 vim.keymap.set("n", "-", require "oil".open_float, { desc = "Oil (Float)" })
 vim.keymap.set('n', ';', ':', { noremap = true, silent = true })
-vim.keymap.set('n', '<CR>', ':', { noremap = true, silent = false, desc = 'Open command mode' })
 
 -- Custom definition buffer replacement
 function replace_buffer_with_definition()

@@ -26,59 +26,64 @@ vim.pack.add {
   "https://github.com/neovim/nvim-lspconfig", -- data only
   -- Dart/Flutter
   "https://github.com/nvim-flutter/flutter-tools.nvim",
-  'https://github.com/mfussenegger/nvim-dap',
+  -- debugging
+  -- 'https://github.com/mfussenegger/nvim-dap',
+  -- 'https://github.com/rcarriga/nvim-dap-ui',
   "https://github.com/nvim-lua/plenary.nvim",
-  'https://github.com/rcarriga/nvim-dap-ui',
-  'https://github.com/nvim-neotest/nvim-nio',
+  -- not sure why this was here
+  -- 'https://github.com/nvim-neotest/nvim-nio',
   -- misc
   'https://github.com/stevearc/conform.nvim',
   'https://github.com/rmagatti/auto-session',
-  'https://github.com/windwp/nvim-autopairs',
-  'https://github.com/folke/trouble.nvim',
   'https://github.com/windwp/nvim-autopairs'
 }
 
 -- 3. PLUGIN SETUP =====================================================================================================
 
+-- 3.a. ------------------------------------------------------------------------------------
 local function scandir(directory)
-  local i, t, popen = 0, {}, io.popen
+  local t, popen = {}, io.popen
   local pfile = popen('ls -1 "' .. directory .. '"')
+  if not pfile then return t end
   for filename in pfile:lines() do
     if filename:match("%.lua$") then
-      i = i + 1
-      t[i] = filename
+      table.insert(t, filename)
     end
   end
   pfile:close()
   return t
 end
 
+-- 2. Load each plugin config
 local plugin_dir = "plugins"
-local files = scandir(vim.fn.stdpath("config") .. "/lua/" .. plugin_dir)
+local config_path = vim.fn.stdpath("config") .. "/lua/" .. plugin_dir
+local files = scandir(config_path)
 
 for _, filename in ipairs(files) do
-  local module = plugin_dir .. "." .. filename:gsub("%.lua$", "")
-  local ok, plugin = pcall(require, module)
-  if ok and type(plugin) == "table" then
-    -- If it has a `config` field, call it
-    local name_only = filename:gsub("%.lua$", "")
-    require(name_only).setup()
-    vim.schedule(function() print(name_only) end)
+  local plugin_name = filename:gsub("%.lua$", "")
+  local module = plugin_dir .. "." .. plugin_name
+
+  local ok, config = pcall(require, module)
+  if ok and type(config) == "table" then
+    -- Try to require the actual plugin and call .setup(config)
+    local plugin_ok, plugin = pcall(require, plugin_name)
+    if plugin_ok and type(plugin.setup) == "function" then
+      plugin.setup(config)
+    else
+      vim.notify("Plugin '" .. plugin_name .. "' does not have a setup function", vim.log.levels.WARN)
+    end
   else
-    vim.notify("Failed to load plugin from " .. module, vim.log.levels.WARN)
+    vim.notify("Failed to load config module: " .. module, vim.log.levels.ERROR)
   end
 end
 
 -- 3.a. kanagawa.nvim (colorscheme) ------------------------------------------------------------------------------------
+
 require "kanagawa".setup { ---@type KanagawaConfig
   colors = { theme = { all = { ui = { bg_gutter = "none" } } } },
 }
 
 vim.cmd.colorscheme "kanagawa"
-
-require("nvim-autopairs").setup {}
-require("auto-session").setup {}
-require("trouble").setup {}
 
 -- 3.c. nvim-treesitter (treesitter parser management) -----------------------------------------------------------------
 require "nvim-treesitter".install {
@@ -89,8 +94,13 @@ require "nvim-treesitter".install {
   "dart"
 }
 
-
 -- 6. DEBUGGING ========================================================================================================
+vim.diagnostic.config({
+  signs = true,
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
+})
 
 
 -- 4. LSP ==============================================================================================================
@@ -101,5 +111,4 @@ vim.lsp.enable {
 }
 
 -- 5. KEYMAPS ==========================================================================================================
-
 require 'remap'

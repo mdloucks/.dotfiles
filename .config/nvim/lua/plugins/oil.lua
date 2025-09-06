@@ -4,22 +4,20 @@ return {
   },
   skip_confirm_for_simple_edits = true,
   float = {
-    -- Padding around the floating window
-    padding = 10,
-    -- max_width and max_height can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
-    max_width = 0,
-    max_height = 0,
+    padding = 20,
+    max_width = 0.5,   -- 50% width of editor
+    max_height = 0.5,  -- 50% height of editor
     border = "rounded",
     win_options = {
       winblend = 0,
     },
-    -- optionally override the oil buffers window title with custom function: fun(winid: integer): string
-    get_win_title = nil,
-    -- preview_split: Split direction: "auto", "left", "right", "above", "below".
-    preview_split = "auto",
-    -- This is the config that will be passed to nvim_open_win.
-    -- Change values here to customize the layout
     override = function(conf)
+      local width = math.floor(vim.o.columns * 0.5)
+      local height = math.floor(vim.o.lines * 0.5)
+      conf.width = width
+      conf.height = height
+      conf.row = math.floor((vim.o.lines - height) / 2)
+      conf.col = math.floor((vim.o.columns - width) / 2)
       return conf
     end,
   },
