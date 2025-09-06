@@ -170,6 +170,11 @@ source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 
 export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
 
-export PATH="/opt/homebrew/opt/dart@3.7.2/bin:$PATH"
+## [Completion]
+## Completion scripts setup. Remove the following line to uninstall
+[[ -f /Users/mloucks/.dart-cli-completion/zsh-config.zsh ]] && . /Users/mloucks/.dart-cli-completion/zsh-config.zsh || true
+## [/Completion]
 
-. "$HOME/.local/bin/env"
+export JAVA_HOME=$(/usr/libexec/java_home -v 17)
+
+git config --global ~/.dotfiles/gitalias.txt
