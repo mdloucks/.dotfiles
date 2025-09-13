@@ -26,12 +26,14 @@ vim.pack.add {
   "https://github.com/neovim/nvim-lspconfig", -- data only
   -- Dart/Flutter
   "https://github.com/nvim-flutter/flutter-tools.nvim",
+  -- UI for flutter-tools
+  "https://github.com/stevearc/dressing.nvim",
   -- debugging
   'https://github.com/mfussenegger/nvim-dap',
   'https://github.com/rcarriga/nvim-dap-ui',
+-- dependency of nvim-dap-ui
+'https://github.com/nvim-neotest/nvim-nio',
   "https://github.com/nvim-lua/plenary.nvim",
-  -- not sure why this was here
-  -- 'https://github.com/nvim-neotest/nvim-nio',
   -- misc
   'https://github.com/stevearc/conform.nvim',
   'https://github.com/rmagatti/auto-session',
@@ -86,12 +88,17 @@ require "kanagawa".setup { ---@type KanagawaConfig
 vim.cmd.colorscheme "kanagawa"
 
 -- 3.c. nvim-treesitter (treesitter parser management) -----------------------------------------------------------------
-require "nvim-treesitter".install {
-  "lua",
-  "markdown",
-  "markdown_inline",
-  "query",
-  "dart"
+require("nvim-treesitter").setup {
+  ensure_installed = {
+    "lua",
+    "markdown",
+    "markdown_inline",
+    "query",
+    "dart",
+  },
+  sync_install = false,   -- don’t block startup
+  auto_install = false,   -- don’t try to auto-install on open
+  highlight = { enable = true },
 }
 
 -- 6. DEBUGGING ========================================================================================================

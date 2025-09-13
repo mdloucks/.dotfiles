@@ -1,11 +1,11 @@
 return {
   dev_log = {
-    enabled = true,
+    enabled = false,
   },
   fvm = true,
-  -- debugger = {
-  --   enabled = true,
-  --   exception_breakpoints = {},
-  --   run_via_dap = true,
-  -- },
+  debugger = {
+    enabled = true,
+    exception_breakpoints = {},
+    run_via_dap = true,
+  },
 }
