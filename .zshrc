@@ -117,8 +117,9 @@ fi
 
 #WHISKER SPECIFIC
 alias whisker="cd /Users/mloucks/development/whisker-mobile/; bash ./scripts/dev/run.sh"
-export PATH=$HOME/development/flutter/bin:$PATH
 alias build_runner="flutter pub run build_runner build --delete-conflicting-outputs"
+alias flutter="fvm flutter"
+alias dart="fvm dart"
 
 
 alias scripts="cd ~/Scripts/"
@@ -178,3 +179,4 @@ export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
 export JAVA_HOME=$(/usr/libexec/java_home -v 17)
 
 git config --global ~/.dotfiles/gitalias.txt
+export PATH="$PATH":"$HOME/fvm/default/bin"
