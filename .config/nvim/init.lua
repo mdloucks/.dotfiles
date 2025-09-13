@@ -27,8 +27,8 @@ vim.pack.add {
   -- Dart/Flutter
   "https://github.com/nvim-flutter/flutter-tools.nvim",
   -- debugging
-  -- 'https://github.com/mfussenegger/nvim-dap',
-  -- 'https://github.com/rcarriga/nvim-dap-ui',
+  'https://github.com/mfussenegger/nvim-dap',
+  'https://github.com/rcarriga/nvim-dap-ui',
   "https://github.com/nvim-lua/plenary.nvim",
   -- not sure why this was here
   -- 'https://github.com/nvim-neotest/nvim-nio',
